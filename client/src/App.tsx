@@ -1,11 +1,13 @@
 import React from 'react';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from './pages/home'
 
-const App: React.FC = () => {
+export default function App() {
     return (
-        <div>
-            <h1>Hello, world!</h1>
-        </div>
+        <BrowserRouter>
+            <Routes>
+                <Route index element={<Home />} />
+            </Routes>
+        </BrowserRouter>
     );
 };
-
-export default App;
