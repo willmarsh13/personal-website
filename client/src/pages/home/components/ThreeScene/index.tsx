@@ -1,199 +1,176 @@
-import React, { useRef, useEffect, JSX } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls, useGLTF, Environment } from '@react-three/drei'
-import { OrbitControls as ThreeOrbitControls } from 'three-stdlib'
-import * as THREE from 'three'
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
-import { Typography } from '@mui/material'
-import GUI from 'lil-gui'
+// src/components/Scene.tsx
 
-// Settings interface for GUI controls
-interface ControlsSettings {
-    modelScale: number
-    rotX: number
-    rotY: number
-    rotZ: number
-    camX: number
-    camY: number
-    camZ: number
-    fov: number
-}
+import React, { useRef, useEffect } from 'react';
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
+import {MathUtils} from "three";
 
-// Props for the model component
-interface RotatingSpaceShuttleModelProps {
-    modelRef: React.RefObject<THREE.Group | null>
-}
-
-// Component that loads and animates the GLB model
-function RotatingSpaceShuttleModel({ modelRef }: RotatingSpaceShuttleModelProps): JSX.Element {
-    const { scene, animations } = useGLTF('/assets/SpaceShuttle.glb') as unknown as GLTF
-    const mixer = useRef<THREE.AnimationMixer | null>(null)
-
-    // Initialize animation mixer and play all clips
-    useEffect(() => {
-        if (animations.length > 0 && modelRef.current) {
-            mixer.current = new THREE.AnimationMixer(modelRef.current)
-            animations.forEach((clip: THREE.AnimationClip) => {
-                mixer.current
-                    ?.clipAction(clip, modelRef.current as THREE.Object3D)
-                    ?.play()
-            })
-        }
-    }, [animations, modelRef])
-
-    // Update animation mixer each frame
-    useFrame((_, delta: number) => {
-        mixer.current?.update(delta)
-    })
-
-    return <primitive ref={modelRef} object={scene} scale={modelRef.current?.scale.x} />
-}
-
-// Main scene component with GUI
-export default function ThreeScene(): JSX.Element {
-    const modelRef = useRef<THREE.Group>(null)
-    const cameraRef = useRef<THREE.PerspectiveCamera>(null)
-    const guiRef = useRef<GUI | null>(null)
-    const orbitRef = useRef<ThreeOrbitControls>(null)
-
-    const settings = useRef<ControlsSettings>({
-        modelScale: 1.33982,
-        rotX: 0.747699,
-        rotY: -1.57079,
-        rotZ: 0.050265,
-        camX: -3.28,
-        camY: -3.52,
-        camZ: 9.02,
-        fov: 8.722,
-    })
+const Scene: React.FC = () => {
+    const mountRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const orbit = orbitRef.current
-        const cam = cameraRef.current
+        const mount = mountRef.current;
+        if (!mount) return;
 
-        if (orbit && cam) {
-            const target = new THREE.Vector3(10, 120, 100)
-            orbit.target.copy(target)
-            orbit.update()
+        //
+        // 1. Renderer
+        //
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(mount.clientWidth, mount.clientHeight);
+        renderer.setClearColor(0x000000, 0);
 
-            cam.lookAt(target)
-        }
-    }, [])
+        // cast only this one line to any so TS won’t complain
+        ;(renderer as any).physicallyCorrectLights = true;
 
-    // Setup GUI on mount
-    useEffect(() => {
-        if (guiRef.current) return // already initialized
+        // use new API: outputColorSpace + SRGBColorSpace
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.5;
 
-        const gui = new GUI()
-        guiRef.current = gui
+        mount.appendChild(renderer.domElement);
 
-        // Model folder
-        const modelFolder = gui.addFolder('Model')
-        modelFolder
-            .add(settings.current, 'modelScale', 0.01, 2)
-            .onChange((v: number) => modelRef.current?.scale.setScalar(v))
-        modelFolder
-            .add(settings.current, 'rotX', -Math.PI, Math.PI)
-            .onChange((v: number) => {
-                if (modelRef.current) modelRef.current.rotation.x = v
-            })
-        modelFolder
-            .add(settings.current, 'rotY', -Math.PI, Math.PI)
-            .onChange((v: number) => {
-                if (modelRef.current) modelRef.current.rotation.y = v
-            })
-        modelFolder
-            .add(settings.current, 'rotZ', -Math.PI, Math.PI)
-            .onChange((v: number) => {
-                if (modelRef.current) modelRef.current.rotation.z = v
-            })
-        modelFolder.open()
+        //
+        // 2. Scene + Camera (45° FOV to avoid fisheye)
+        //
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(
+            45,
+            mount.clientWidth / mount.clientHeight,
+            0.1,
+            1000
+        );
+        camera.position.set(0, 0, 10);
+        const ambient = new THREE.AmbientLight(0xffffff, 1.2);
+        scene.add(ambient);
 
-        // Camera folder
-        const camFolder = gui.addFolder('Camera')
-        camFolder
-            .add(settings.current, 'camX', -10, 10)
-            .onChange((v: number) => {
-                if (cameraRef.current) cameraRef.current.position.x = v
-            })
-        camFolder
-            .add(settings.current, 'camY', -10, 10)
-            .onChange((v: number) => {
-                if (cameraRef.current) cameraRef.current.position.y = v
-            })
-        camFolder
-            .add(settings.current, 'camZ', -10, 10)
-            .onChange((v: number) => {
-                if (cameraRef.current) cameraRef.current.position.z = v
-            })
-        camFolder
-            .add(settings.current, 'fov', 1, 100)
-            .onChange((v: number) => {
-                if (cameraRef.current) {
-                    cameraRef.current.fov = v
-                    cameraRef.current.updateProjectionMatrix()
+        const dir = new THREE.DirectionalLight(0xffffff, 2);
+        dir.position.set(5, 10, 7.5);
+        scene.add(dir);
+
+        //
+        // 3. Controls
+        //
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+
+        //
+        // 4. HDR Environment
+        //
+        const pmremGen = new THREE.PMREMGenerator(renderer);
+        pmremGen.compileEquirectangularShader();
+        new RGBELoader()
+            .setDataType(THREE.UnsignedByteType)
+            .load('/assets/environment.hdr', (hdr) => {
+                const envMap = pmremGen.fromEquirectangular(hdr).texture;
+                scene.environment = envMap;
+                scene.background = null;
+                scene.environmentIntensity = 2.0;
+                hdr.dispose();
+                pmremGen.dispose();
+            });
+
+        //
+        // 5. Fallback Lights
+        //
+        scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+        const dl = new THREE.DirectionalLight(0xffffff, 1);
+        dl.position.set(5, 10, 7.5);
+        scene.add(dl);
+
+        //
+        // 6. Load, scale, center & fix textures
+        //
+        const loader = new GLTFLoader();
+        let mixer: THREE.AnimationMixer | null = null;
+
+        loader.load(
+            '/assets/JetEngine.glb',
+            (gltf) => {
+                const model = gltf.scene;
+
+                //scale down
+                model.scale.setScalar(0.6);
+
+                // center pivot
+                const box = new THREE.Box3().setFromObject(model);
+                const center = box.getCenter(new THREE.Vector3());
+                model.position.sub(center);
+
+                //optimal rotation
+                model.rotation.y = MathUtils.degToRad(40);
+                model.rotation.x = MathUtils.degToRad(10);
+
+                // correct color‐space on maps
+                model.traverse((o) => {
+                    if ((o as THREE.Mesh).isMesh) {
+                        const m = (o as THREE.Mesh).material as THREE.MeshStandardMaterial;
+
+                        if (m.map) {
+                            // new API: colorSpace
+                            (m.map as any).colorSpace = THREE.SRGBColorSpace;
+                        }
+
+                        if (m.emissiveMap) {
+                            (m.emissiveMap as any).colorSpace = THREE.SRGBColorSpace;
+                        }
+
+                        m.needsUpdate = true;
+                    }
+                });
+
+                scene.add(model);
+
+                if (gltf.animations.length) {
+                    mixer = new THREE.AnimationMixer(model);
+                    gltf.animations.forEach((clip) => {
+                        mixer!.clipAction(clip).play();
+                    });
                 }
-            })
-        camFolder.open()
+            },
+            undefined,
+            (err) => console.error('GLTF load error:', err)
+        );
 
-        // Apply initial settings
-        if (modelRef.current) {
-            modelRef.current.scale.setScalar(settings.current.modelScale)
-            modelRef.current.rotation.set(
-                settings.current.rotX,
-                settings.current.rotY,
-                settings.current.rotZ
-            )
-        }
-        if (cameraRef.current) {
-            cameraRef.current.position.set(
-                settings.current.camX,
-                settings.current.camY,
-                settings.current.camZ
-            )
-            cameraRef.current.fov = settings.current.fov
-            cameraRef.current.updateProjectionMatrix()
-        }
+        //
+        // 7. Render loop
+        //
+        const clock = new THREE.Clock();
+        let reqId: number;
+        const animate = () => {
+            reqId = requestAnimationFrame(animate);
+            const delta = clock.getDelta();
+            mixer?.update(delta);
+            controls.update();
+            renderer.render(scene, camera);
+        };
+        animate();
 
+        //
+        // 8. Resize
+        //
+        const onResize = () => {
+            camera.aspect = mount.clientWidth / mount.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(mount.clientWidth, mount.clientHeight);
+        };
+        window.addEventListener('resize', onResize);
+
+        //
+        // 9. Cleanup
+        //
         return () => {
-            gui.destroy()
-            guiRef.current = null
-        }
-    }, [])
+            cancelAnimationFrame(reqId);
+            window.removeEventListener('resize', onResize);
+            controls.dispose();
+            renderer.dispose();
+            scene.clear();
+            mount.removeChild(renderer.domElement);
+        };
+    }, []);
 
-    return (
-        <>
-            <Canvas
-                camera={{
-                    position: [
-                        settings.current.camX,
-                        settings.current.camY,
-                        settings.current.camZ,
-                    ],
-                    fov: settings.current.fov,
-                }}
-                onCreated={({ camera }) => {
-                    // Cast to PerspectiveCamera
-                    cameraRef.current = camera as THREE.PerspectiveCamera
-                }}
-                style={{ height: 'inherit' }}
-            >
-                <ambientLight intensity={0.5} />
-                <directionalLight position={[4, 30, 5]} intensity={1.2} />
-                <Environment preset="warehouse" />
+    return <div ref={mountRef} style={{ width: '100%', height: '100%' }} />;
+};
 
-                <React.Suspense fallback={null}>
-                    <RotatingSpaceShuttleModel modelRef={modelRef} />
-                </React.Suspense>
-
-                <OrbitControls
-                    ref={orbitRef}
-                    enableZoom={true}
-                    enablePan={true}
-                    enableRotate={true}
-                />
-            </Canvas>
-            <Typography>Photo from X</Typography>
-        </>
-    )
-}
+export default Scene;

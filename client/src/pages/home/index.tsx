@@ -74,7 +74,7 @@ export default function HomePage() {
                         </Container>
                     </Box>
                 </Grid>
-                <Grid size={{xs: 12, lg: 6}} height='50vh' position='relative' ref={clumpContainerRef} sx={{border: '1px solid white'}}>
+                <Grid size={{xs: 12, lg: 6}} height='50vh' position='relative' ref={clumpContainerRef}>
                     <ThreeScene />
                 </Grid>
             </Grid>
