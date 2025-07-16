@@ -22,7 +22,7 @@ const Scene: React.FC = () => {
         renderer.setClearColor(0x000000, 0);
 
         // cast only this one line to any so TS won’t complain
-        ;(renderer as any).physicallyCorrectLights = true;
+        (renderer as any).physicallyCorrectLights = true;
 
         // use new API: outputColorSpace + SRGBColorSpace
         renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -90,25 +90,20 @@ const Scene: React.FC = () => {
             (gltf) => {
                 const model = gltf.scene;
 
-                //scale down
                 model.scale.setScalar(0.6);
 
-                // center pivot
                 const box = new THREE.Box3().setFromObject(model);
                 const center = box.getCenter(new THREE.Vector3());
                 model.position.sub(center);
 
-                //optimal rotation
                 model.rotation.y = MathUtils.degToRad(40);
                 model.rotation.x = MathUtils.degToRad(10);
 
-                // correct color‐space on maps
                 model.traverse((o) => {
                     if ((o as THREE.Mesh).isMesh) {
                         const m = (o as THREE.Mesh).material as THREE.MeshStandardMaterial;
 
                         if (m.map) {
-                            // new API: colorSpace
                             (m.map as any).colorSpace = THREE.SRGBColorSpace;
                         }
 

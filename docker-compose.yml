@@ -1,0 +1,6 @@
+services:
+  site:
+    image: personal-site
+    restart: unless-stopped
+    ports:
+      - "3001:3001"

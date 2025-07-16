@@ -12,10 +12,12 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^1.9.0",
+    "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "mongodb": "^6.17.0",
     "nodemon": "^3.1.10",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "prom-client": "^15.1.3"
   }
 }
