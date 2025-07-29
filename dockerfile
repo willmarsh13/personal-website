@@ -5,8 +5,8 @@ WORKDIR /app
 COPY ./server/package*.json ./server/
 COPY ./client/package*.json ./client/
 
-RUN npm --prefix ./server install --unsafe-perm=true
-RUN npm --prefix ./client install --unsafe-perm=true
+RUN npm --prefix ./server install
+RUN npm --prefix ./client install
 
 COPY . .
 
