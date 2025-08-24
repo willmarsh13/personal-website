@@ -16,7 +16,7 @@ RUN npm --prefix ./server install
 COPY client/package*.json ./client/
 RUN npm --prefix ./client install
 
-COPY . .DD_GIT_COMMIT_SHA
+COPY . .
 
 RUN npm --prefix ./server run build
 
