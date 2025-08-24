@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require("path");
 const app = express();
-const port = 8080;
+const port = 3001;
 const bodyParser = require("body-parser");
 const client = require('prom-client');
 

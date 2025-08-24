@@ -6,7 +6,7 @@
   "scripts": {
     "startDev": "nodemon index.js",
     "startProd": "node index.js",
-    "build": "npm install && cd ../client && npm install && npm run build"
+    "build": "npm --prefix ../client run build"
   },
   "author": "Will Marsh",
   "license": "ISC",
