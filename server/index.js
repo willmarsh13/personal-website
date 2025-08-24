@@ -1,43 +1,53 @@
 const express = require('express');
 const cors = require('cors');
-const path = require("path");
-const app = express();
-const port = 3001;
-const bodyParser = require("body-parser");
+const path = require('path');
 const client = require('prom-client');
 
-app.use(express.static(path.resolve(__dirname, "../client/build")));
-app.timeout = 60000;
+const app = express();
+const port = 3001;
 
+app.use(express.static(path.resolve(__dirname, '../client/build')));
 app.use(cors());
-
-app.set("trust proxy", true);
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 500000 }));
+app.set('trust proxy', true);
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 client.collectDefaultMetrics();
+
+const httpRequestDurationMs = new client.Histogram({
+    name: 'http_request_duration_ms',
+    help: 'Duration of HTTP requests in ms',
+    labelNames: ['method', 'route', 'status_code'],
+    buckets: [50, 100, 200, 300, 400, 500, 1000, 2000]
+});
+
+app.use((req, res, next) => {
+    const end = httpRequestDurationMs.startTimer();
+    res.on('finish', () => {
+        end({
+            method: req.method,
+            route: req.route ? req.route.path : req.path,
+            status_code: res.statusCode
+        });
+    });
+    next();
+});
 
 app.get('/metrics', async (req, res) => {
     res.set('Content-Type', client.register.contentType);
     res.end(await client.register.metrics());
 });
 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
+app.get('/assets', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../client/build/index.html'));
 });
 
-app.get("/assets", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
-});
-
-// Mount your API routes
 app.use('/api', require('./api'));
 
-// Fallback: send React app for everything else
 app.get(/.*/, (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
+    res.sendFile(path.resolve(__dirname, '../client/build/index.html'));
 });
 
 app.listen(port, () => {
-    console.log(`server listening on port ${port}`);
+    console.log(`Server listening on port ${port}`);
 });
