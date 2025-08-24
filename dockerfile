@@ -21,4 +21,4 @@ COPY . .
 RUN npm --prefix ./server run build
 
 EXPOSE 3006
-CMD NODE_ENV=$NODE_ENV npm --prefix run startProd
+CMD NODE_ENV=$NODE_ENV npm --prefix ./server run startProd
