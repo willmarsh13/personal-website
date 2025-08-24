@@ -24,20 +24,20 @@ app.get('/metrics', async (req, res) => {
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
-})
+});
 
 app.get("/assets", (req, res) => {
     res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
 });
 
-app.use('/api', async (req, res, next) => {
-    next(error);
-}, require('./api'));
+// Mount your API routes
+app.use('/api', require('./api'));
 
-app.get("/*", async (req, res, next) => {
+// Fallback: send React app for everything else
+app.get(/.*/, (req, res) => {
     res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
 });
 
 app.listen(port, () => {
     console.log(`server listening on port ${port}`);
-})
+});
