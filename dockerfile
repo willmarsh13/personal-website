@@ -1,23 +1,24 @@
-FROM node:18-slim AS build
+FROM node:18
 
-WORKDIR /app
+ARG NODE_ENV=local
+ARG DD_GIT_REPOSITORY_URL
+ARG DD_GIT_COMMIT_SHA
+
+ENV NODE_ENV=$NODE_ENV
+ENV DD_GIT_REPOSITORY_URL=${DD_GIT_REPOSITORY_URL}
+ENV DD_GIT_COMMIT_SHA=${DD_GIT_COMMIT_SHA}
+
+WORKDIR /usr/src/personalsite
 
 COPY server/package*.json ./server/
+RUN npm --prefix ./server install
+
 COPY client/package*.json ./client/
+RUN npm --prefix ./client install
 
-RUN npm --prefix ./server ci && \
-    npm --prefix ./client ci
+COPY . .DD_GIT_COMMIT_SHA
 
-COPY . .
+RUN npm --prefix ./server run build
 
-RUN npm --prefix ./client run build
-RUN cp -r ./client/build ./server/build
-
-FROM node:18-slim
-
-WORKDIR /app
-
-COPY --from=build /app/server ./server
-
-EXPOSE 3001
-CMD ["npm", "--prefix", "./server", "run", "startProd"]
+EXPOSE 3006
+CMD NODE_ENV=$NODE_ENV npm --prefix run startProd
