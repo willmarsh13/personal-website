@@ -76,7 +76,7 @@ const projects: project[] = [
     },
     {
         name: 'ML Dog Breed Image Classifier',
-        description: 'Find out what breed your dog is based on physical characteristics',
+        description: 'Find out what breed your dog is based on physical characteristics.',
         tech: ['Java', 'Kotlin', 'XML'],
         liveDemo: '',
         repo: 'https://github.com/willmarsh13/MLDogBreedClassifier',
