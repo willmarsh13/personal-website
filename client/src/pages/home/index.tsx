@@ -1,8 +1,10 @@
-import {Box, Container, Typography, Button, Grid, Card, CardContent, Chip} from '@mui/material';
+import {Box, Container, Typography, Grid, Paper} from '@mui/material';
 import {useEffect, useRef, useState} from 'react';
-import {Rocket, LayoutDashboard, Gamepad2, DatabaseZap} from 'lucide-react';
 import React from 'react';
 import ThreeScene from "./components/ThreeScene";
+import Intro from "./components/Intro";
+import Projects from "./components/Projects";
+import Skills from "./components/Skills";
 
 const startDate = new Date('2020-01-01');
 const getYearsOfExperience = () => {
@@ -14,7 +16,15 @@ const getYearsOfExperience = () => {
     return hasHadAnniversary ? years : years - 1;
 };
 
-const projects = [
+export interface project {
+    name: string,
+    description: string,
+    tech: string[],
+    liveDemo: string,
+    repo: string,
+}
+
+const projects: project[] = [
     {
         name: 'Custom Home Automation',
         description: 'A web app running locally on a Raspberry Pi with custom ground-up authentication to control smart devices via Govee API.',
@@ -90,31 +100,17 @@ export default function HomePage() {
             {/* Hero Section */}
             <Grid container>
                 <Grid size={{xs: 12, lg: 6}}>
-                    <Box sx={{py: 10, backgroundColor: 'background.default', color: 'text.primary', height: '100%'}}>
-                        <Container maxWidth="lg" sx={{display: 'flex', justifyContent: 'flex-start', flexDirection: 'column', alignContent: 'flex-start', alignItems: 'flex-start', height: '100%'}}>
-                            <Typography variant="h2" fontWeight="bold" gutterBottom>
-                                Hi, I'm Will Marsh
-                            </Typography>
-                            <Typography variant="h5" maxWidth="md">
-                                Senior Software Engineer with expertise in UI/UX and backend systems, focused on
-                                building
-                                intuitive data visualizations and interactive interfaces.
-                            </Typography>
-                            <Box display='flex' flexGrow='1 !important'/>
-                            <Typography variant="h6" maxWidth="md" paddingTop={2}>
-                                Scroll down to see some of my projects!
-                            </Typography>
-                        </Container>
-                    </Box>
+                    <Intro/>
                 </Grid>
                 <Grid size={{xs: 12, lg: 6}} height='50vh' position='relative' ref={clumpContainerRef}>
                     <ThreeScene/>
+                    <Typography variant='body2' maxWidth='md' paddingTop={2} align='center'>
+                        Click and drag to play with the engine!
+                    </Typography>
                 </Grid>
             </Grid>
 
-
-            {/* Counters */}
-            <Box sx={{py: 8, backgroundColor: 'background.paper'}}>
+            <Box sx={{pb: 8, pt: 15, backgroundColor: 'background.paper'}}>
                 <Container maxWidth="lg">
                     <Grid container spacing={4} justifyContent="center">
                         <Grid>
@@ -137,84 +133,56 @@ export default function HomePage() {
                 </Container>
             </Box>
 
-            {/* Projects Section */}
-            <Box sx={{py: 10, backgroundColor: 'background.default'}}>
-                <Container maxWidth="lg">
-                    <Typography variant="h4" fontWeight="medium" gutterBottom>
-                        Featured Projects
-                    </Typography>
-                    <Grid container spacing={4}>
-                        {projects.map((project, idx) => (
-                            <Grid size={{xs: 12, md: 6}} key={idx}>
-                                <Card variant="outlined" sx={{height: '100%'}}>
-                                    <CardContent>
-                                        <Typography variant="h6" fontWeight="bold" gutterBottom>
-                                            {project.name}
-                                        </Typography>
-                                        <Typography variant="body2" mb={2}>
-                                            {project.description}
-                                        </Typography>
-                                        <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 1}}>
-                                            {project.tech.map((t, i) => (
-                                                <Chip key={i} label={t} size="small"/>
-                                            ))}
-                                        </Box>
-                                        <Box mt={2} display="flex" gap={2}>
-                                            {project.liveDemo && (
-                                                <Button href={project.liveDemo} target="_blank" variant="contained">
-                                                    Live Demo
-                                                </Button>
-                                            )}
-                                            {project.repo && (
-                                                <Button href={project.repo} target="_blank" variant="outlined">
-                                                    GitHub
-                                                </Button>
-                                            )}
-                                        </Box>
-                                    </CardContent>
-                                </Card>
-                            </Grid>
-                        ))}
+            {/* Counters */}
+            <Box height='100%' mx={2}>
+                <Paper elevation={1} sx={{height: '100%'}}>
+                    <Grid container spacing={4} p={3}>
+                        <Grid size='auto'>
+                            <Box
+                                component="img"
+                                src="/assets/profile.jpg"
+                                alt="Will Marsh Headshot"
+                                sx={{
+                                    width: "100%",        // fills container width
+                                    height: "auto",       // keeps aspect ratio
+                                    borderRadius: 2,      // optional rounding
+                                    display: "block",     // remove inline gaps
+                                    maxWidth: 300,        // keeps it from being *too* big
+                                    mx: "auto"            // centers horizontally
+                                }}
+                            />
+                        </Grid>
+                        <Grid size='grow' sx={{display: 'flex', flexDirection: 'column'}}>
+                            <Typography variant='h3'>About</Typography>
+                            <Typography sx={{flexGrow: '1 !important'}}>
+                                Currently, I serve as a Senior Software Engineer at Collins Aerospace, where I am the
+                                sole software/infrastructure engineer behind several high-profile projects. We have come
+                                to appreciate and value similarity in our technology. By focusing on what web components
+                                can signify to users, I have learned how to support multiple parts of the business, all
+                                while maintaining a seamless "ecosystem" feel. Many of the applications I have created
+                                have hundreds of users, yet no tutorial or demo.
+                                <br/><br/>
+                                I work across the full stack, building with React on the front end while also managing
+                                the infrastructure, deployments, and long-term maintenance in both Azure and AWS
+                                environments. What drives me is making complex data and workflows easier to use, with a
+                                focus on human-centered design so the technology feels intuitive and supportive for the
+                                people relying on it.
+                            </Typography>
+                            <Typography>
+                                Want to learn more? Scroll down or send me an email!
+                            </Typography>
+                        </Grid>
                     </Grid>
-                </Container>
+
+                </Paper>
             </Box>
+
+            {/* Projects Section */}
+            <Projects projects={projects}/>
 
             {/* Highlights Section */}
             <Box sx={{py: 10, backgroundColor: 'background.paper'}}>
-                <Container maxWidth="lg">
-                    <Grid container spacing={4}>
-                        {[
-                            {
-                                icon: <Rocket/>,
-                                title: 'Rapid Prototyping',
-                                desc: 'Fast iterations with solid engineering principles.'
-                            },
-                            {
-                                icon: <LayoutDashboard/>,
-                                title: 'Data Dashboards',
-                                desc: 'Real-time data visualization and interactive charts.'
-                            },
-                            {
-                                icon: <Gamepad2/>,
-                                title: 'Game UI Design',
-                                desc: 'Simple, yet engaging interfaces.'
-                            },
-                            {
-                                icon: <DatabaseZap/>,
-                                title: 'Backend Architecture',
-                                desc: 'Scalable, efficient, and secure APIs with a strong DB design.'
-                            },
-                        ].map((item, i) => (
-                            <Grid size={{xs: 12, sm: 6, md: 3}} key={i}>
-                                <Card variant="outlined" sx={{p: 2, textAlign: 'center'}}>
-                                    <Box mb={1}>{item.icon}</Box>
-                                    <Typography fontWeight="bold">{item.title}</Typography>
-                                    <Typography variant="body2">{item.desc}</Typography>
-                                </Card>
-                            </Grid>
-                        ))}
-                    </Grid>
-                </Container>
+                <Skills/>
             </Box>
         </Box>
     );
