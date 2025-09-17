@@ -14,7 +14,7 @@ import {project} from "../../index";
 export default function Projects({ projects }: { projects: project[] }) {
 
     return (
-        <Box sx={{py: 10, backgroundColor: 'background.default'}}>
+        <Box sx={{py: 10, backgroundColor: 'transparent'}}>
             <Container maxWidth="lg">
                 <Typography variant="h4" fontWeight="medium" gutterBottom>
                     Featured Projects

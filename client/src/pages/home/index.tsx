@@ -1,10 +1,11 @@
-import {Box, Container, Typography, Grid, Paper} from '@mui/material';
+import {Box, Container, Typography, Grid, Paper, Card} from '@mui/material';
 import {useEffect, useRef, useState} from 'react';
 import React from 'react';
 import ThreeScene from "./components/ThreeScene";
 import Intro from "./components/Intro";
 import Projects from "./components/Projects";
 import Skills from "./components/Skills";
+import SocialMedia from "./components/SocialMedia";
 
 const startDate = new Date('2020-01-01');
 const getYearsOfExperience = () => {
@@ -81,7 +82,6 @@ const projects: project[] = [
         liveDemo: '',
         repo: 'https://github.com/willmarsh13/MLDogBreedClassifier',
     },
-    // Add more projects here...
 ];
 
 export default function HomePage() {
@@ -110,49 +110,52 @@ export default function HomePage() {
                 </Grid>
             </Grid>
 
-            <Box sx={{pb: 8, pt: 15, backgroundColor: 'background.paper'}}>
+            <Box sx={{pb: 8, pt: 15, backgroundColor: 'transparent'}}>
                 <Container maxWidth="lg">
-                    <Grid container spacing={4} justifyContent="center">
+                    <Grid container spacing={2} justifyContent="center">
                         <Grid>
-                            <Typography variant="h3" fontWeight="bold" textAlign="center">
-                                {experience}+
-                            </Typography>
-                            <Typography variant="body1" textAlign="center">
-                                Years of Experience
-                            </Typography>
+                            <Card variant="outlined" sx={{padding: 1, height: '100%', display: 'flex', flexDirection: 'column'}}>
+                                <Typography variant="h3" fontWeight="bold" textAlign="center">
+                                    {experience}+
+                                </Typography>
+                                <Typography variant="body1" textAlign="center">
+                                    Years of Experience
+                                </Typography>
+                            </Card>
                         </Grid>
                         <Grid>
-                            <Typography variant="h3" fontWeight="bold" textAlign="center">
-                                10+
-                            </Typography>
-                            <Typography variant="body1" textAlign="center">
-                                Projects Completed
-                            </Typography>
+                            <Card variant="outlined" sx={{padding: 1, height: '100%', display: 'flex', flexDirection: 'column'}}>
+                                <Typography variant="h3" fontWeight="bold" textAlign="center">
+                                    10+
+                                </Typography>
+                                <Typography variant="body1" textAlign="center">
+                                    Projects Completed
+                                </Typography>
+                            </Card>
                         </Grid>
                     </Grid>
                 </Container>
             </Box>
 
-            {/* Counters */}
             <Box height='100%' mx={2}>
-                <Paper elevation={1} sx={{height: '100%'}}>
+                <Paper elevation={0} sx={{height: '100%'}}>
                     <Grid container spacing={4} p={3}>
-                        <Grid size='auto'>
+                        <Grid size={{xs: 12, md: 'auto'}}>
                             <Box
                                 component="img"
                                 src="/assets/profile.jpg"
                                 alt="Will Marsh Headshot"
                                 sx={{
-                                    width: "100%",        // fills container width
-                                    height: "auto",       // keeps aspect ratio
-                                    borderRadius: 2,      // optional rounding
-                                    display: "block",     // remove inline gaps
-                                    maxWidth: 300,        // keeps it from being *too* big
-                                    mx: "auto"            // centers horizontally
+                                    width: "100%",
+                                    height: "auto",
+                                    borderRadius: 2,
+                                    display: "block",
+                                    maxWidth: 300,
+                                    mx: "auto"
                                 }}
                             />
                         </Grid>
-                        <Grid size='grow' sx={{display: 'flex', flexDirection: 'column'}}>
+                        <Grid size={{xs: 12, md: 'grow'}} sx={{display: 'flex', flexDirection: 'column'}}>
                             <Typography variant='h3'>About</Typography>
                             <Typography sx={{flexGrow: '1 !important'}}>
                                 Currently, I serve as a Senior Software Engineer at Collins Aerospace, where I am the
@@ -167,9 +170,8 @@ export default function HomePage() {
                                 environments. What drives me is making complex data and workflows easier to use, with a
                                 focus on human-centered design so the technology feels intuitive and supportive for the
                                 people relying on it.
-                            </Typography>
-                            <Typography>
-                                Want to learn more? Scroll down or send me an email!
+                                <br/><br/>
+                                <b>Want to learn more? Scroll down or send me an email!</b>
                             </Typography>
                         </Grid>
                     </Grid>
@@ -181,8 +183,12 @@ export default function HomePage() {
             <Projects projects={projects}/>
 
             {/* Highlights Section */}
-            <Box sx={{py: 10, backgroundColor: 'background.paper'}}>
+            <Box sx={{py: 10, backgroundColor: 'transparent'}}>
                 <Skills/>
+            </Box>
+
+            <Box>
+                <SocialMedia/>
             </Box>
         </Box>
     );

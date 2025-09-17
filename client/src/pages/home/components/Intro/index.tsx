@@ -5,7 +5,7 @@ export default function Intro() {
 
     return (
         <>
-            <Box sx={{py: 10, backgroundColor: 'background.default', color: 'text.primary', height: '100%'}}>
+            <Box sx={{py: 10, backgroundColor: 'transparent', color: 'text.primary', height: '100%'}}>
                 <Container maxWidth="lg" sx={{
                     display: 'flex',
                     justifyContent: 'center',
