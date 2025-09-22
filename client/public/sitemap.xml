@@ -4,16 +4,16 @@
         <loc>https://willmarsh.dev/</loc>
         <priority>1.0</priority>
     </url>
-    <url>
-        <loc>https://willmarsh.dev/projects</loc>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://willmarsh.dev/about</loc>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://willmarsh.dev/contact</loc>
-        <priority>0.5</priority>
-    </url>
+<!--    <url>-->
+<!--        <loc>https://willmarsh.dev/projects</loc>-->
+<!--        <priority>0.8</priority>-->
+<!--    </url>-->
+<!--    <url>-->
+<!--        <loc>https://willmarsh.dev/about</loc>-->
+<!--        <priority>0.8</priority>-->
+<!--    </url>-->
+<!--    <url>-->
+<!--        <loc>https://willmarsh.dev/contact</loc>-->
+<!--        <priority>0.5</priority>-->
+<!--    </url>-->
 </urlset>
