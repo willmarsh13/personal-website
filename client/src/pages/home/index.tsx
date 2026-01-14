@@ -114,7 +114,8 @@ export default function HomePage() {
                 <Container maxWidth="lg">
                     <Grid container spacing={2} justifyContent="center">
                         <Grid>
-                            <Card variant="outlined" sx={{padding: 1, height: '100%', display: 'flex', flexDirection: 'column'}}>
+                            <Card variant="outlined"
+                                  sx={{padding: 1, height: '100%', display: 'flex', flexDirection: 'column'}}>
                                 <Typography variant="h3" fontWeight="bold" textAlign="center">
                                     {experience}+
                                 </Typography>
@@ -124,7 +125,8 @@ export default function HomePage() {
                             </Card>
                         </Grid>
                         <Grid>
-                            <Card variant="outlined" sx={{padding: 1, height: '100%', display: 'flex', flexDirection: 'column'}}>
+                            <Card variant="outlined"
+                                  sx={{padding: 1, height: '100%', display: 'flex', flexDirection: 'column'}}>
                                 <Typography variant="h3" fontWeight="bold" textAlign="center">
                                     10+
                                 </Typography>
@@ -158,18 +160,16 @@ export default function HomePage() {
                         <Grid size={{xs: 12, md: 'grow'}} sx={{display: 'flex', flexDirection: 'column'}}>
                             <Typography variant='h3'>About</Typography>
                             <Typography sx={{flexGrow: '1 !important'}}>
-                                Currently, I serve as a Senior Software Engineer at Collins Aerospace, where I am the
-                                sole software/infrastructure engineer behind several high-profile projects. We have come
-                                to appreciate and value similarity in our technology. By focusing on what web components
-                                can signify to users, I have learned how to support multiple parts of the business, all
-                                while maintaining a seamless "ecosystem" feel. Many of the applications I have created
-                                have hundreds of users, yet no tutorial or demo.
+                                I am passionate about having technology work for people, not the other way around. At
+                                Delta Air Lines, I am able to put this practice to the test as the Technical Product
+                                Owner for the Fly Delta app, where I specialize in deep linking, so our customers can
+                                enjoy a seamless experience. Deep linking in the Fly Delta app enables users to access
+                                the services they need without having to break focus, or leave the app.
                                 <br/><br/>
-                                I work across the full stack, building with React on the front end while also managing
-                                the infrastructure, deployments, and long-term maintenance in both Azure and AWS
-                                environments. What drives me is making complex data and workflows easier to use, with a
-                                focus on human-centered design so the technology feels intuitive and supportive for the
-                                people relying on it.
+                                My commitment to doing things the right way stems from my hobby as a private pilot where
+                                safety, precision and systems-thinking are critical. In my free time, I like to create
+                                web apps to make people's lives easier. I enjoy skiing with my wife and taking my dog,
+                                Goose on long walks and hikes in the Blue Ridge mountains.
                                 <br/><br/>
                                 <b>Want to learn more? Scroll down or send me an email!</b>
                             </Typography>

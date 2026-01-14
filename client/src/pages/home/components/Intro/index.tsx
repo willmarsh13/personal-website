@@ -18,9 +18,8 @@ export default function Intro() {
                         👋 Hi, I'm Will Marsh
                     </Typography>
                     <Typography variant="h5" maxWidth="md">
-                        Senior Software Engineer with expertise in UI/UX and backend systems, focused on
-                        building
-                        intuitive data visualizations and interactive interfaces.
+                        Technical Product Owner with expertise in UI/UX, backend systems and mobile app deep linking, focused on
+                        bridging technology and people.
                     </Typography>
                     <Typography variant="h6" maxWidth="md" paddingTop={2}>
                         Scroll down to see some of my projects!
