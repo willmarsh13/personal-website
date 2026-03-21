@@ -18,8 +18,7 @@ export default function Intro() {
                         👋 Hi, I'm Will Marsh
                     </Typography>
                     <Typography variant="h5" maxWidth="md">
-                        Technical Product Owner with expertise in UI/UX, backend systems and mobile app deep linking, focused on
-                        bridging technology and people.
+                        Technical Product Owner for Delta Air Lines, focused on building intuitive mobile applications that are consistent and user friendly.
                     </Typography>
                     <Typography variant="h6" maxWidth="md" paddingTop={2}>
                         Scroll down to see some of my projects!

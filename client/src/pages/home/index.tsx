@@ -160,16 +160,18 @@ export default function HomePage() {
                         <Grid size={{xs: 12, md: 'grow'}} sx={{display: 'flex', flexDirection: 'column'}}>
                             <Typography variant='h3'>About</Typography>
                             <Typography sx={{flexGrow: '1 !important'}}>
-                                I am passionate about having technology work for people, not the other way around. At
-                                Delta Air Lines, I am able to put this practice to the test as the Technical Product
-                                Owner for the Fly Delta app, where I specialize in deep linking, so our customers can
-                                enjoy a seamless experience. Deep linking in the Fly Delta app enables users to access
-                                the services they need without having to break focus, or leave the app.
+                                I am passionate about having technology work for people, not the other way around. At Delta Air Lines, 
+                                I am able to put this practice to the test as the Technical Product Owner for the Fly Delta app, where 
+                                I specialize in integrating deeplinks and personalization into the Fly Delta app. 
                                 <br/><br/>
-                                My commitment to doing things the right way stems from my hobby as a private pilot where
-                                safety, precision and systems-thinking are critical. In my free time, I like to create
-                                web apps to make people's lives easier. I enjoy skiing with my wife and taking my dog,
-                                Goose on long walks and hikes in the Blue Ridge mountains.
+                                When users navigate to the app, we have the technology work for the user by managing as much of the heavy 
+                                lifting as possible. Whether the user is trying to check in for an upcoming flight or quickly trying to 
+                                pull up their boarding pass, these integrations help make our digital applications the platform of choice 
+                                for users when choosing to fly Delta.
+                                <br/><br/>
+                                My commitment to doing things the right way stems from my hobby as a private pilot where safety, precision 
+                                and systems-thinking are critical. In my free time, I like to create web apps to make people's lives easier. 
+                                I also enjoy skiing with my wife and taking my dog, Goose on long walks and hikes in the Blue Ridge mountains.
                                 <br/><br/>
                                 <b>Want to learn more? Scroll down or send me an email!</b>
                             </Typography>

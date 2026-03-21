@@ -1,0 +1,21 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "startDev",
+			"path": "server",
+			"problemMatcher": [],
+			"label": "npm: startDev - server",
+			"detail": "nodemon index.js"
+		},
+		{
+			"type": "npm",
+			"script": "start",
+			"path": "client",
+			"problemMatcher": [],
+			"label": "npm: start - client",
+			"detail": "react-scripts start"
+		}
+	]
+}
