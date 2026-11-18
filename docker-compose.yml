@@ -5,3 +5,11 @@ services:
     container_name: personal-site
     ports:
       - "3001:3001"
+    environment:
+      NODE_ENV: production
+    # MONGODB_URI, GUESTBOOK_SECRET, etc. live in server/.env (gitignored).
+    env_file:
+      - path: server/.env
+        required: false
+      - path: .env
+        required: false

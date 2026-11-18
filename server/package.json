@@ -6,7 +6,9 @@
   "scripts": {
     "startDev": "nodemon index.js",
     "startProd": "node index.js",
-    "build": "npm --prefix ../client run build"
+    "build": "npm --prefix ../client run build",
+    "hash-password": "node scripts/hash-password.js",
+    "gen-secret": "node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\""
   },
   "author": "Will Marsh",
   "license": "ISC",
@@ -15,9 +17,22 @@
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
+    "express-rate-limit": "^8.7.4",
     "mongodb": "^6.17.0",
     "nodemon": "^3.1.10",
+    "obscenity": "^0.4.6",
     "path": "^0.12.7",
     "prom-client": "^15.1.3"
+  },
+  "nodemonConfig": {
+    "env": {
+      "PORT": "3002"
+    },
+    "ignore": [
+      "scripts/*"
+    ]
+  },
+  "engines": {
+    "node": ">=20.12"
   }
 }

@@ -1,31 +1,22 @@
-import {Box, Container, Grid, Typography} from "@mui/material";
 import React from "react";
+import {Container} from "../../../../ui";
 
 export default function Intro() {
 
     return (
-        <>
-            <Box sx={{py: 10, backgroundColor: 'transparent', color: 'text.primary', height: '100%'}}>
-                <Container maxWidth="lg" sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    flexDirection: 'column',
-                    alignContent: 'flex-start',
-                    alignItems: 'flex-start',
-                    height: '100%'
-                }}>
-                    <Typography variant="h2" fontWeight="bold" gutterBottom>
-                        👋 Hi, I'm Will Marsh
-                    </Typography>
-                    <Typography variant="h5" maxWidth="md">
-                        Technical Product Owner for Delta Air Lines, focused on building intuitive mobile applications that are consistent and user friendly.
-                    </Typography>
-                    <Typography variant="h6" maxWidth="md" paddingTop={2}>
-                        Scroll down to see some of my projects!
-                    </Typography>
-                </Container>
-            </Box>
-        </>
+        <div className="intro">
+            <Container size="lg" className="intro__inner">
+                <h1 className="t-display intro__title">
+                    👋 Hi, I'm Will Marsh
+                </h1>
+                <p className="t-lead intro__lead">
+                    Technical Product Owner for Delta Air Lines, focused on building intuitive mobile applications that are consistent and user friendly.
+                </p>
+                <p className="intro__cta">
+                    Scroll down to see some of my projects!
+                </p>
+            </Container>
+        </div>
     )
 
 }

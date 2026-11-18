@@ -1,58 +1,51 @@
 import React, {useState, useEffect} from "react";
-import {Box, Typography, Button, Link, Paper} from "@mui/material";
+import {Button, Card} from "../../../ui";
+
+export const PRIVACY_ACCEPTED_EVENT = "privacy:accepted";
+export const PRIVACY_STORAGE_KEY = "privacyBannerAccepted";
 
 const PrivacyBanner: React.FC = () => {
-    const STORAGE_KEY = "privacyBannerAccepted";
+    const STORAGE_KEY = PRIVACY_STORAGE_KEY;
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
         const accepted = localStorage.getItem(STORAGE_KEY);
         if (!accepted) setOpen(true);
-    }, []);
+    }, [STORAGE_KEY]);
 
     const handleAccept = () => {
         localStorage.setItem(STORAGE_KEY, "true");
         setOpen(false);
+        window.dispatchEvent(new Event(PRIVACY_ACCEPTED_EVENT));
     };
 
     if (!open) return null;
 
     return (
-        <Paper
-            elevation={6}
-            sx={{
-                position: "fixed",
-                bottom: 16,
-                left: 16,
-                width: 300,
-                p: 2,
-                borderRadius: 2,
-                zIndex: 1500,
-            }}
-        >
-            <Typography variant="subtitle1" gutterBottom>
-                <b>{`We value your privacy`}</b>
-            </Typography>
-            <Typography variant="body2" sx={{mb: 1}}>
+        <Card as="aside" raised aria-label="Privacy notice" className="floating-card floating-card--left">
+            <p style={{fontWeight: 700, marginBottom: 8}}>
+                {`We value your privacy`}
+            </p>
+            <p className="t-small t-muted" style={{marginBottom: 12}}>
                 We don't sell any personal data on this site.
                 <br/>
                 <br/>
                 {`Please review our `}
-                <Link href="/legal#privacy_policy" underline="hover">
+                <a href="/legal#privacy_policy">
                     {`Privacy Policy`}
-                </Link>
+                </a>
                 {` and `}
-                <Link href="/legal#terms_of_service" underline="hover">
+                <a href="/legal#terms_of_service">
                     {`Terms of Service`}
-                </Link>
+                </a>
                 {` to learn more.`}
-            </Typography>
-            <Box sx={{textAlign: "right"}}>
-                <Button size="small" variant="contained" onClick={handleAccept}>
+            </p>
+            <div style={{textAlign: "right"}}>
+                <Button size="sm" variant="solid" onClick={handleAccept}>
                     Got it
                 </Button>
-            </Box>
-        </Paper>
+            </div>
+        </Card>
     );
 };
 

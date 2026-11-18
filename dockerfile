@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:22
 
 ARG NODE_ENV=local
 ARG DD_GIT_REPOSITORY_URL
@@ -20,5 +20,5 @@ COPY . .
 
 RUN npm --prefix ./server run build
 
-EXPOSE 3006
+EXPOSE 3001
 CMD NODE_ENV=$NODE_ENV npm --prefix ./server run startProd

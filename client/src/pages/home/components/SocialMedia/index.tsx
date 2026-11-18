@@ -1,69 +1,47 @@
 import React from "react";
-import {useTheme} from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import {Box, Paper, Typography, Stack, Grid, Button} from "@mui/material";
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import EmailIcon from '@mui/icons-material/Email';
+import {Button, Card, EmailIcon, GitHubIcon, LinkedInIcon} from "../../../../ui";
 import {EMAILS, mailto} from "../../../../Shared/emails";
 
 interface socialMedia {
     name: string,
     icon: React.ReactNode,
     URL: string,
-    color: any,
+    color: 'primary' | 'secondary' | 'success',
 }
 
 const socials: socialMedia[] = [
     {
         name: 'LinkedIn',
-        icon: <LinkedInIcon/>,
+        icon: <LinkedInIcon size={20}/>,
         URL: 'https://www.linkedin.com/in/willmarsh13',
         color: 'secondary',
     },
     {
         name: 'GitHub',
-        icon: <GitHubIcon/>,
+        icon: <GitHubIcon size={20}/>,
         URL: 'https://github.com/willmarsh13',
         color: 'success',
     },
     {
         name: 'Email',
-        icon: <EmailIcon/>,
+        icon: <EmailIcon size={20}/>,
         URL: mailto(EMAILS.me),
         color: 'primary',
     }
 ]
 
 export default function SocialMedia() {
-
-    const theme = useTheme()
-    const isMediumScreen = useMediaQuery(theme.breakpoints.down('md')); // True if screen is smaller than 'sm' breakpoint
-
     return (
-        <>
-            <Paper elevation={2} sx={{width: '100%'}}>
-                <Box width="100%" justifyContent="center" alignItems='center' paddingY={3}>
-                    <Grid container alignItems="center" spacing={4}>
-                        <Grid size={{xs: 12, md: 6}}>
-                            <Typography variant="h5" textAlign={isMediumScreen ? 'center' : 'end'}>Contact
-                                me!</Typography>
-                        </Grid>
-                        <Grid size={{xs: 12, md: 6}} display='flex'
-                              justifyContent={isMediumScreen ? 'center' : 'start'}>
-                            <Stack spacing={2} width='min-content'>
-                                {socials.map((social) => (
-                                    <Button startIcon={social.icon} href={social.URL} variant="contained"
-                                            color={social.color}>
-                                        {social.name}
-                                    </Button>
-                                ))}
-                            </Stack>
-                        </Grid>
-                    </Grid>
-                </Box>
-            </Paper>
-        </>
+        <Card pad="none" className="contact-band">
+            <h2 className="t-h3 contact-band__title">Contact me!</h2>
+            <div className="contact-band__buttons">
+                {socials.map((social) => (
+                    <Button key={social.name} startIcon={social.icon} href={social.URL} variant="solid" color={social.color}>
+                        {social.name}
+                    </Button>
+                ))}
+            </div>
+        </Card>
     )
 
 }

@@ -1,18 +1,10 @@
 import React from "react";
-import {
-    Container,
-    Typography,
-    Box,
-    Divider,
-    List,
-    ListItem,
-    ListItemText,
-    Link,
-} from "@mui/material";
+import {Container} from "../../ui";
+import "./legal.css";
 import {EMAILS, mailto} from "../../Shared/emails";
 
 const EmailLink: React.FC<{ address: string }> = ({address}) => (
-    <Link href={mailto(address)}>{address}</Link>
+    <a href={mailto(address)}>{address}</a>
 );
 
 /**
@@ -23,235 +15,238 @@ const EmailLink: React.FC<{ address: string }> = ({address}) => (
 const SITE_NAME = "willmarsh.dev";
 const OWNER_NAME = "Will Marsh";
 const GOVERNING_LAW_STATE = "United States"; // or your state, e.g. "Texas"
-const LAST_UPDATED = "January 6, 2026";
+const LAST_UPDATED = "November 17, 2026";
 
 const LegalPage: React.FC = () => {
     return (
-        <Container maxWidth="md" sx={{ py: 6 }}>
-            <Typography variant="h3" gutterBottom>
+        <Container size="md" className="legal">
+            <h1 className="t-h1 legal__title">
                 Privacy Policy & Terms of Service
-            </Typography>
+            </h1>
 
-            <Typography variant="body2" color="text.secondary" gutterBottom>
+            <p className="t-small t-muted">
                 Last updated: {LAST_UPDATED}
-            </Typography>
+            </p>
 
-            <Divider sx={{ my: 4 }} />
+            <hr className="divider"/>
 
             {/* ================= PRIVACY POLICY ================= */}
-            <Box component="section" sx={{ mb: 6 }} id='privacy_policy'>
-                <Typography variant="h4" gutterBottom>
+            <section className="legal__section" id='privacy_policy'>
+                <h2 className="t-h2 legal__h2">
                     Privacy Policy
-                </Typography>
+                </h2>
 
-                <Typography paragraph>
+                <p className="legal__p">
                     This Privacy Policy explains how {SITE_NAME} ("we", "us", or "our")
                     collects, uses, and protects your information when you use our
                     website and related services.
-                </Typography>
+                </p>
 
-                <Typography variant="h6" gutterBottom>
+                <h3 className="t-h4 legal__h3">
                     Information We Collect
-                </Typography>
-                <Typography paragraph>
+                </h3>
+                <p className="legal__p">
                     We collect information only as necessary to operate and maintain user
                     accounts and the functionality of the site. This may include:
-                </Typography>
+                </p>
 
-                <List>
-                    <ListItem>
-                        <ListItemText primary="Account Information" secondary="Email address, first name, last name, password (stored in hashed form), and any other information relevant to account operation." />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText primary="Technical Information" secondary="IP address, browser type, device information, and server logs collected automatically for security and operational purposes." />
-                    </ListItem>
-                </List>
+                <ul className="legal__list">
+                    <li>
+                        <span className="legal__item-primary">Account Information</span><span className="legal__item-secondary">Email address, first name, last name, password (stored in hashed form), and any other information relevant to account operation.</span>
+                    </li>
+                    <li>
+                        <span className="legal__item-primary">Guestbook Entries</span><span className="legal__item-secondary">The name and message you submit, which are displayed publicly, plus a one-way hashed identifier derived from your IP address. The hash is used only to limit each visitor to one entry and to prevent abuse; your raw IP address is not stored with your entry.</span>
+                    </li>
+                    <li>
+                        <span className="legal__item-primary">Technical Information</span><span className="legal__item-secondary">IP address, browser type, device information, and server logs collected automatically for security and operational purposes.</span>
+                    </li>
+                </ul>
 
-                <Typography variant="h6" gutterBottom>
+                <h3 className="t-h4 legal__h3">
                     How We Use Your Information
-                </Typography>
-                <Typography paragraph>
+                </h3>
+                <p className="legal__p">
                     We use collected information to:
-                </Typography>
-                <List>
-                    <ListItem>
-                        <ListItemText primary="Create and manage user accounts" />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText primary="Provide and maintain site functionality" />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText primary="Communicate with users regarding account-related matters" />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText primary="Protect the security and integrity of the site" />
-                    </ListItem>
-                </List>
+                </p>
+                <ul className="legal__list">
+                    <li>
+                        <span className="legal__item-primary">Create and manage user accounts</span>
+                    </li>
+                    <li>
+                        <span className="legal__item-primary">Provide and maintain site functionality</span>
+                    </li>
+                    <li>
+                        <span className="legal__item-primary">Communicate with users regarding account-related matters</span>
+                    </li>
+                    <li>
+                        <span className="legal__item-primary">Protect the security and integrity of the site</span>
+                    </li>
+                </ul>
 
-                <Typography variant="h6" gutterBottom>
+                <h3 className="t-h4 legal__h3">
                     Data Sharing
-                </Typography>
-                <Typography paragraph>
+                </h3>
+                <p className="legal__p">
                     We do not sell, rent, or trade your personal information. We may share
                     information only with service providers necessary to operate the site
                     (such as hosting providers) or if required by law.
-                </Typography>
+                </p>
 
-                <Typography variant="h6" gutterBottom>
+                <h3 className="t-h4 legal__h3">
                     Data Retention
-                </Typography>
-                <Typography paragraph>
+                </h3>
+                <p className="legal__p">
                     We retain personal information only for as long as necessary to
                     operate the site, comply with legal obligations, and resolve disputes.
-                </Typography>
+                </p>
 
-                <Typography variant="h6" gutterBottom>
+                <h3 className="t-h4 legal__h3">
                     Your Rights
-                </Typography>
-                <Typography paragraph>
+                </h3>
+                <p className="legal__p">
                     You may request access to or deletion of your personal information by
                     contacting us at <EmailLink address={EMAILS.privacy}/>.
-                </Typography>
+                </p>
 
-                <Typography variant="h6" gutterBottom>
+                <h3 className="t-h4 legal__h3">
                     Communications
-                </Typography>
-                <Typography paragraph>
+                </h3>
+                <p className="legal__p">
                     Account and system emails are sent from <EmailLink address={EMAILS.noreply}/> or{" "}
                     <EmailLink address={EMAILS.notifications}/>. These addresses are not monitored; for
                     help with your account, contact <EmailLink address={EMAILS.support}/>.
-                </Typography>
+                </p>
 
-                <Typography variant="h6" gutterBottom>
+                <h3 className="t-h4 legal__h3">
                     Children’s Privacy
-                </Typography>
-                <Typography paragraph>
+                </h3>
+                <p className="legal__p">
                     This site is not intended for children under the age of 13. We do not
                     knowingly collect personal information from children.
-                </Typography>
+                </p>
 
-                <Typography variant="h6" gutterBottom>
+                <h3 className="t-h4 legal__h3">
                     Changes to This Policy
-                </Typography>
-                <Typography paragraph>
+                </h3>
+                <p className="legal__p">
                     We may update this Privacy Policy from time to time. Changes will be
                     posted on this page with an updated revision date.
-                </Typography>
-            </Box>
+                </p>
+            </section>
 
-            <Divider sx={{ my: 6 }} />
+            <hr className="divider"/>
 
             {/* ================= TERMS OF SERVICE ================= */}
-            <Box component="section" id='terms_of_service'>
-                <Typography variant="h4" gutterBottom>
+            <section className="legal__section" id='terms_of_service'>
+                <h2 className="t-h2 legal__h2">
                     Terms of Service
-                </Typography>
+                </h2>
 
-                <Typography paragraph>
+                <p className="legal__p">
                     By accessing or using {SITE_NAME}, you agree to be bound by these Terms
                     of Service. If you do not agree, you may not use the site.
-                </Typography>
+                </p>
 
-                <Typography variant="h6" gutterBottom>
+                <h3 className="t-h4 legal__h3">
                     Acceptable Use
-                </Typography>
-                <Typography paragraph>
+                </h3>
+                <p className="legal__p">
                     You agree not to use the site for any unlawful, harmful, abusive, or
                     malicious purpose, including but not limited to:
-                </Typography>
-                <List>
-                    <ListItem>
-                        <ListItemText primary="Violating any applicable laws or regulations" />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText primary="Attempting to gain unauthorized access to accounts or systems" />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText primary="Harassment, abuse, or harm toward others" />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText primary="Introducing malware, scraping, or denial-of-service attacks" />
-                    </ListItem>
-                </List>
+                </p>
+                <ul className="legal__list">
+                    <li>
+                        <span className="legal__item-primary">Violating any applicable laws or regulations</span>
+                    </li>
+                    <li>
+                        <span className="legal__item-primary">Attempting to gain unauthorized access to accounts or systems</span>
+                    </li>
+                    <li>
+                        <span className="legal__item-primary">Harassment, abuse, or harm toward others</span>
+                    </li>
+                    <li>
+                        <span className="legal__item-primary">Introducing malware, scraping, or denial-of-service attacks</span>
+                    </li>
+                </ul>
 
-                <Typography variant="h6" gutterBottom>
+                <h3 className="t-h4 legal__h3">
                     Reporting Security Issues
-                </Typography>
-                <Typography paragraph>
+                </h3>
+                <p className="legal__p">
                     If you discover a security vulnerability, please report it responsibly to{" "}
                     <EmailLink address={EMAILS.security}/> rather than disclosing it publicly.
-                </Typography>
+                </p>
 
-                <Typography variant="h6" gutterBottom>
+                <h3 className="t-h4 legal__h3">
                     Account Responsibility
-                </Typography>
-                <Typography paragraph>
+                </h3>
+                <p className="legal__p">
                     You are responsible for maintaining the confidentiality of your
                     account credentials and for all activity that occurs under your
                     account.
-                </Typography>
+                </p>
 
-                <Typography variant="h6" gutterBottom>
+                <h3 className="t-h4 legal__h3">
                     Intellectual Property
-                </Typography>
-                <Typography paragraph>
+                </h3>
+                <p className="legal__p">
                     All content, code, and materials on this site are owned by or licensed
                     to {OWNER_NAME} and are protected by applicable intellectual property
                     laws. You may not reproduce or redistribute content without permission.
-                </Typography>
+                </p>
 
-                <Typography variant="h6" gutterBottom>
+                <h3 className="t-h4 legal__h3">
                     External Links
-                </Typography>
-                <Typography paragraph>
+                </h3>
+                <p className="legal__p">
                     This site may include links to other websites or pages under the same
                     domain or third-party domains. We are not responsible for the content
                     or practices of external sites.
-                </Typography>
+                </p>
 
-                <Typography variant="h6" gutterBottom>
+                <h3 className="t-h4 legal__h3">
                     Disclaimer
-                </Typography>
-                <Typography paragraph>
+                </h3>
+                <p className="legal__p">
                     The site is provided on an "as is" and "as available" basis. We make no
                     warranties regarding accuracy, reliability, or availability.
-                </Typography>
+                </p>
 
-                <Typography variant="h6" gutterBottom>
+                <h3 className="t-h4 legal__h3">
                     Limitation of Liability
-                </Typography>
-                <Typography paragraph>
+                </h3>
+                <p className="legal__p">
                     To the maximum extent permitted by law, {OWNER_NAME} shall not be
                     liable for any indirect, incidental, or consequential damages arising
                     from your use of the site.
-                </Typography>
+                </p>
 
-                <Typography variant="h6" gutterBottom>
+                <h3 className="t-h4 legal__h3">
                     Termination
-                </Typography>
-                <Typography paragraph>
+                </h3>
+                <p className="legal__p">
                     We reserve the right to suspend or terminate access to the site at our
                     discretion for violations of these Terms.
-                </Typography>
+                </p>
 
-                <Typography variant="h6" gutterBottom>
+                <h3 className="t-h4 legal__h3">
                     Governing Law
-                </Typography>
-                <Typography paragraph>
+                </h3>
+                <p className="legal__p">
                     These Terms are governed by the laws of {GOVERNING_LAW_STATE}, without
                     regard to conflict of law principles.
-                </Typography>
+                </p>
 
-                <Typography variant="h6" gutterBottom>
+                <h3 className="t-h4 legal__h3">
                     Contact
-                </Typography>
-                <Typography paragraph>
+                </h3>
+                <p className="legal__p">
                     If you have questions about these Terms or the Privacy Policy, contact
                     us at <EmailLink address={EMAILS.contact}/>. For privacy requests, use{" "}
                     <EmailLink address={EMAILS.privacy}/>; for billing questions, use{" "}
                     <EmailLink address={EMAILS.billing}/>.
-                </Typography>
-            </Box>
+                </p>
+            </section>
         </Container>
     );
 };

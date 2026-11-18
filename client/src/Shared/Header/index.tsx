@@ -1,118 +1,67 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
 import {pages} from "../../App";
-import CodeIcon from '@mui/icons-material/Code';
+import {openTerminal} from "../Terminal";
+import {CloseIcon, CodeIcon, IconButton, MenuIcon, TerminalIcon} from "../../ui";
+import "./header.css";
 
 export default function Header() {
-    const [profileAnchor, setProfileAnchor] = React.useState<null | HTMLElement>(null);
+    const [menuOpen, setMenuOpen] = React.useState(false);
+    const menuRef = React.useRef<HTMLDivElement>(null);
 
-    const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setProfileAnchor(event.currentTarget);
-    };
-
-    const handleCloseNavMenu = () => {
-        setProfileAnchor(null);
-    };
+    // Close the mobile menu on outside click or Escape.
+    React.useEffect(() => {
+        if (!menuOpen) return;
+        const onDown = (e: MouseEvent) => {
+            if (!menuRef.current?.contains(e.target as Node)) setMenuOpen(false);
+        };
+        const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMenuOpen(false);
+        document.addEventListener("mousedown", onDown);
+        document.addEventListener("keydown", onKey);
+        return () => {
+            document.removeEventListener("mousedown", onDown);
+            document.removeEventListener("keydown", onKey);
+        };
+    }, [menuOpen]);
 
     return (
-        <AppBar position="static">
-            <Container maxWidth="xl">
-                <Toolbar disableGutters>
-                    <CodeIcon sx={{display: {xs: 'none', md: 'flex'}, mr: 1}}/>
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="a"
-                        href='/'
-                        sx={{
-                            mr: 2,
-                            display: {xs: 'none', md: 'flex'},
-                            fontWeight: 600,
-                            letterSpacing: '.05rem',
-                            color: 'inherit',
-                            textDecoration: 'none',
-                        }}
-                    >
-                        Will Marsh
-                    </Typography>
-                    <Box sx={{flexGrow: 1, display: {xs: 'flex', md: 'none'}}}>
-                        <IconButton
-                            size="large"
-                            aria-label="account of current user"
-                            aria-controls="menu-appbar"
-                            aria-haspopup="true"
-                            onClick={handleOpenNavMenu}
-                            color="inherit"
-                        >
-                            <MenuIcon/>
-                        </IconButton>
-                        <Menu
-                            id="menu-appbar"
-                            anchorEl={profileAnchor}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'left',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'left',
-                            }}
-                            open={Boolean(profileAnchor)}
-                            onClose={handleCloseNavMenu}
-                            sx={{display: {xs: 'block', md: 'none'}}}
-                        >
-                            {pages.filter(pg => pg.showInNavBar)?.map(({id, link, name}) => (
-                                <a key={id} href={link} style={{textDecoration: 'none', color: 'inherit'}}>
-                                    <MenuItem key={id} href={link}>
-                                        <Typography sx={{textAlign: 'center'}}>{name}</Typography>
-                                    </MenuItem>
-                                </a>
+        <header className="site-header">
+            <div className="site-header__inner">
+                {/* Desktop logo */}
+                <a href="/" className="site-header__brand">
+                    <CodeIcon className="site-header__logo-icon"/>
+                    <span>Will Marsh</span>
+                </a>
+
+                {/* Mobile menu */}
+                <div className="site-header__mobile-menu" ref={menuRef}>
+                    <IconButton aria-label="Open navigation menu" aria-expanded={menuOpen} aria-controls="mobile-nav"
+                                onClick={() => setMenuOpen((o) => !o)}>
+                        {menuOpen ? <CloseIcon/> : <MenuIcon/>}
+                    </IconButton>
+                    {menuOpen && (
+                        <nav id="mobile-nav" className="site-header__dropdown">
+                            {pages.filter((pg) => pg.showInNavBar).map(({id, link, name}) => (
+                                <a key={id} href={link}>{name}</a>
                             ))}
-                        </Menu>
-                    </Box>
-                    <Typography
-                        variant="h5"
-                        noWrap
-                        component="a"
-                        href="/"
-                        sx={{
-                            mr: 2,
-                            display: {xs: 'flex', md: 'none'},
-                            flexGrow: 1,
-                            fontFamily: 'monospace',
-                            fontWeight: 700,
-                            letterSpacing: '.3rem',
-                            color: 'inherit',
-                            textDecoration: 'none',
-                        }}
-                    >
-                        WILL MARSH
-                    </Typography>
-                    <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
-                        {pages.filter(page => page.showOnHeader)?.map(({id, link, name}) => (
-                            <Button
-                                key={id}
-                                href={link}
-                                sx={{my: 2, color: 'white', display: 'block'}}
-                            >
-                                {name}
-                            </Button>
-                        ))}
-                    </Box>
-                    <Box sx={{flexGrow: 0}}>
-                    </Box>
-                </Toolbar>
-            </Container>
-        </AppBar>
+                        </nav>
+                    )}
+                </div>
+
+                {/* Mobile wordmark */}
+                <a href="/" className="site-header__wordmark">WILL MARSH</a>
+
+                <nav className="site-header__nav" aria-label="Main">
+                    {pages.filter((page) => page.showOnHeader).map(({id, link, name}) => (
+                        <a key={id} href={link} aria-current={window.location.pathname === link ? "page" : undefined}>{name}</a>
+                    ))}
+                </nav>
+
+                <span data-tooltip="Open terminal ( ` or Ctrl+K )">
+                    <IconButton onClick={openTerminal} aria-label="Open terminal">
+                        <TerminalIcon/>
+                    </IconButton>
+                </span>
+            </div>
+        </header>
     );
 }

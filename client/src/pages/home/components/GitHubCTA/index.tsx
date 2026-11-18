@@ -1,28 +1,20 @@
-import {Button, Paper, Typography} from "@mui/material";
 import React from "react";
+import {Button, Card} from "../../../../ui";
 
 
 export default function GitHubCTA() {
 
     return (
-        <>
-            <Paper elevation={0} sx={{mt: 10, textAlign: 'center', py: 6}}>
-                <Typography variant="h6" gutterBottom>
-                    Want to see more?
-                </Typography>
-                <Typography variant="body1" sx={{mb: 2}}>
-                    My GitHub has more side projects, experiments, and contributions.
-                </Typography>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    href="https://github.com/willmarsh13"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Visit My GitHub
-                </Button>
-            </Paper>
-        </>
+        <Card pad="lg" className="t-center" style={{marginTop: 80}}>
+            <h2 className="t-h4" style={{marginBottom: 8}}>
+                Want to see more?
+            </h2>
+            <p style={{marginBottom: 16}}>
+                My GitHub has more side projects, experiments, and contributions.
+            </p>
+            <Button variant="solid" href="https://github.com/willmarsh13" target="_blank">
+                Visit My GitHub
+            </Button>
+        </Card>
     )
 }

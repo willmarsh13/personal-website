@@ -6,6 +6,28 @@
         <title>Will Marsh</title>
         <link id="favicon" rel="icon" href="/favicons/favicon_light.svg"/>
         <meta name="description" content="Portfolio of Will Marsh, web designer and developer.">
+        <link rel="canonical" href="https://willmarsh.dev/"/>
+        <meta name="theme-color" content="#121212"/>
+
+        <!-- Open Graph (LinkedIn, Slack, Discord, iMessage, Facebook) -->
+        <meta property="og:type" content="website"/>
+        <meta property="og:site_name" content="Will Marsh"/>
+        <meta property="og:title" content="Will Marsh — Web Developer"/>
+        <meta property="og:description" content="Portfolio of Will Marsh, web designer and developer. Projects, skills, and a guestbook."/>
+        <meta property="og:url" content="https://willmarsh.dev/"/>
+        <meta property="og:image" content="https://willmarsh.dev/assets/og-image.jpg"/>
+        <meta property="og:image:width" content="1200"/>
+        <meta property="og:image:height" content="1200"/>
+        <meta property="og:image:type" content="image/jpeg"/>
+        <meta property="og:image:alt" content="Photo of Will Marsh"/>
+        <meta property="og:locale" content="en_US"/>
+
+        <!-- Twitter / X -->
+        <meta name="twitter:card" content="summary"/>
+        <meta name="twitter:title" content="Will Marsh — Web Developer"/>
+        <meta name="twitter:description" content="Portfolio of Will Marsh, web designer and developer."/>
+        <meta name="twitter:image" content="https://willmarsh.dev/assets/og-image.jpg"/>
+        <meta name="twitter:image:alt" content="Photo of Will Marsh"/>
         <style>
             #root {
                 min-height: 100vh;
@@ -17,6 +39,10 @@
                 overflow-x: hidden;
             }
         </style>
+        <script>
+            // Apply the saved theme before first paint so pages don't flash dark.
+            try { if (localStorage.getItem("theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
+        </script>
         <script type="application/ld+json">
             {
                 "@context": "https://schema.org",

@@ -1,7 +1,14 @@
 import React, { useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 const Starfield: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
+    // Night sky in dark mode. In light mode the canvas stays transparent so the
+    // CSS daytime sky (ui.css, .sky) shows through; rockets still fly by.
+    const mode = useSelector((state: RootState) => state.theme.mode);
+    const modeRef = useRef(mode);
+    modeRef.current = mode;
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -66,10 +73,13 @@ const Starfield: React.FC = () => {
             if (!canvas) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            ctx.fillStyle = "black";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            const night = modeRef.current === "dark";
+            if (night) {
+                ctx.fillStyle = "black";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
 
-            stars.forEach((star) => {
+            if (night) stars.forEach((star) => {
                 ctx.beginPath();
                 ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
                 ctx.fillStyle = `rgba(255,255,255,${star.opacity})`;
@@ -124,6 +134,8 @@ const Starfield: React.FC = () => {
     }, []);
 
     return (
+        <>
+        {mode === "light" && <div className="sky" aria-hidden="true"><div className="sky__glow"/></div>}
         <canvas
             ref={canvasRef}
             style={{
@@ -133,6 +145,7 @@ const Starfield: React.FC = () => {
                 zIndex: -1,
             }}
         />
+        </>
     );
 };
 

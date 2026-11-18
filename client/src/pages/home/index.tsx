@@ -1,4 +1,3 @@
-import {Box, Container, Typography, Grid, Paper, Card} from '@mui/material';
 import {useEffect, useRef, useState} from 'react';
 import React from 'react';
 import ThreeScene from "./components/ThreeScene";
@@ -6,6 +5,12 @@ import Intro from "./components/Intro";
 import Projects from "./components/Projects";
 import Skills from "./components/Skills";
 import SocialMedia from "./components/SocialMedia";
+import Guestbook from "./components/Guestbook";
+import {useLocation} from "react-router-dom";
+import {scrollToSection} from "../../Shared/scrollToSection";
+import {Card, Container} from "../../ui";
+import {useFeatures} from "../../Shared/features";
+import "./home.css";
 
 const startDate = new Date('2020-01-01');
 const getYearsOfExperience = () => {
@@ -87,6 +92,13 @@ const projects: project[] = [
 export default function HomePage() {
     const [experience, setExperience] = useState(getYearsOfExperience());
     const clumpContainerRef = useRef<HTMLDivElement>(null);
+    const {hash} = useLocation();
+    const features = useFeatures();
+
+    // Support links like /#guestbook (and the old /guestbook redirect).
+    useEffect(() => {
+        if (hash) scrollToSection(decodeURIComponent(hash.slice(1)));
+    }, [hash]);
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -96,102 +108,77 @@ export default function HomePage() {
     }, []);
 
     return (
-        <Box>
+        <div className="home">
             {/* Hero Section */}
-            <Grid container>
-                <Grid size={{xs: 12, lg: 6}}>
+            <section className="home-hero">
+                <div className="home-hero__intro">
                     <Intro/>
-                </Grid>
-                <Grid size={{xs: 12, lg: 6}} height='50vh' position='relative' ref={clumpContainerRef}>
+                </div>
+                <div className="home-hero__engine" ref={clumpContainerRef}>
                     <ThreeScene/>
-                    <Typography variant='body2' maxWidth='md' paddingTop={2} align='center'>
+                    <p className="t-small t-center home-hero__hint">
                         Click and drag to play with the engine!
-                    </Typography>
-                </Grid>
-            </Grid>
+                    </p>
+                </div>
+            </section>
 
-            <Box sx={{pb: 8, pt: 15, backgroundColor: 'transparent'}}>
-                <Container maxWidth="lg">
-                    <Grid container spacing={2} justifyContent="center">
-                        <Grid>
-                            <Card variant="outlined"
-                                  sx={{padding: 1, height: '100%', display: 'flex', flexDirection: 'column'}}>
-                                <Typography variant="h3" fontWeight="bold" textAlign="center">
-                                    {experience}+
-                                </Typography>
-                                <Typography variant="body1" textAlign="center">
-                                    Years of Experience
-                                </Typography>
-                            </Card>
-                        </Grid>
-                        <Grid>
-                            <Card variant="outlined"
-                                  sx={{padding: 1, height: '100%', display: 'flex', flexDirection: 'column'}}>
-                                <Typography variant="h3" fontWeight="bold" textAlign="center">
-                                    10+
-                                </Typography>
-                                <Typography variant="body1" textAlign="center">
-                                    Projects Completed
-                                </Typography>
-                            </Card>
-                        </Grid>
-                    </Grid>
+            <section className="home-stats">
+                <Container size="lg" className="home-stats__row">
+                    <Card className="home-stat">
+                        <span className="home-stat__value">{experience}+</span>
+                        <span className="home-stat__label">Years of Experience</span>
+                    </Card>
+                    <Card className="home-stat">
+                        <span className="home-stat__value">10+</span>
+                        <span className="home-stat__label">Projects Completed</span>
+                    </Card>
                 </Container>
-            </Box>
+            </section>
 
-            <Box height='100%' mx={2}>
-                <Paper elevation={0} sx={{height: '100%'}}>
-                    <Grid container spacing={4} p={3}>
-                        <Grid size={{xs: 12, md: 'auto'}}>
-                            <Box
-                                component="img"
-                                src="/assets/profile.jpg"
-                                alt="Will Marsh Headshot"
-                                sx={{
-                                    width: "100%",
-                                    height: "auto",
-                                    borderRadius: 2,
-                                    display: "block",
-                                    maxWidth: 300,
-                                    mx: "auto"
-                                }}
-                            />
-                        </Grid>
-                        <Grid size={{xs: 12, md: 'grow'}} sx={{display: 'flex', flexDirection: 'column'}}>
-                            <Typography variant='h3'>About</Typography>
-                            <Typography sx={{flexGrow: '1 !important'}}>
-                                I am passionate about having technology work for people, not the other way around. At Delta Air Lines, 
-                                I am able to put this practice to the test as the Technical Product Owner for the Fly Delta app, where 
-                                I specialize in integrating deeplinks and personalization into the Fly Delta app. 
-                                <br/><br/>
-                                When users navigate to the app, we have the technology work for the user by managing as much of the heavy 
-                                lifting as possible. Whether the user is trying to check in for an upcoming flight or quickly trying to 
-                                pull up their boarding pass, these integrations help make our digital applications the platform of choice 
-                                for users when choosing to fly Delta.
-                                <br/><br/>
-                                My commitment to doing things the right way stems from my hobby as a private pilot where safety, precision 
-                                and systems-thinking are critical. In my free time, I like to create web apps to make people's lives easier. 
-                                I also enjoy skiing with my wife and taking my dog, Goose on long walks and hikes in the Blue Ridge mountains.
-                                <br/><br/>
-                                <b>Want to learn more? Scroll down or send me an email!</b>
-                            </Typography>
-                        </Grid>
-                    </Grid>
-
-                </Paper>
-            </Box>
+            <section className="home-about-wrap">
+                <Card as="article" pad="none" className="home-about">
+                    <img src="/assets/profile.jpg" alt="Will Marsh Headshot" className="home-about__photo"/>
+                    <div className="home-about__text">
+                        <h2 className="t-h1">About</h2>
+                        <p className="t-body">
+                            I am passionate about having technology work for people, not the other way around. At Delta Air Lines, 
+                            I am able to put this practice to the test as the Technical Product Owner for the Fly Delta app, where 
+                            I specialize in integrating deeplinks and personalization into the Fly Delta app. 
+                            <br/><br/>
+                            When users navigate to the app, we have the technology work for the user by managing as much of the heavy 
+                            lifting as possible. Whether the user is trying to check in for an upcoming flight or quickly trying to 
+                            pull up their boarding pass, these integrations help make our digital applications the platform of choice 
+                            for users when choosing to fly Delta.
+                            <br/><br/>
+                            My commitment to doing things the right way stems from my hobby as a private pilot where safety, precision 
+                            and systems-thinking are critical. In my free time, I like to create web apps to make people's lives easier. 
+                            I also enjoy skiing with my wife and taking my dog, Goose on long walks and hikes in the Blue Ridge mountains.
+                            <br/><br/>
+                            <b>Want to learn more? Scroll down or send me an email!</b>
+                        </p>
+                    </div>
+                </Card>
+            </section>
 
             {/* Projects Section */}
-            <Projects projects={projects}/>
+            <section id='projects' className="home-section">
+                <Projects projects={projects}/>
+            </section>
 
             {/* Highlights Section */}
-            <Box sx={{py: 10, backgroundColor: 'transparent'}}>
+            <section id='skills' className="home-section home-section--skills">
                 <Skills/>
-            </Box>
+            </section>
 
-            <Box>
+            <section id='contact' className="home-section--contact">
                 <SocialMedia/>
-            </Box>
-        </Box>
+            </section>
+
+            {features.guestbook && (
+                <section id='guestbook' className="home-section--guestbook">
+                    <Guestbook/>
+                </section>
+            )}
+        </div>
     );
 }

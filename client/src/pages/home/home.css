@@ -1,0 +1,96 @@
+/* Sections linked by id sit below the sticky header. */
+.home [id] { scroll-margin-top: 80px; }
+
+/* ---------------- Hero: same split as before (stacked below 1200px) */
+.home-hero { display: grid; grid-template-columns: 1fr; }
+@media (min-width: 1200px) { .home-hero { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.home-hero > * { min-width: 0; }
+
+.home-hero__engine { position: relative; height: 50vh; }
+.home-hero__hint { padding-top: 16px; color: var(--text-muted); }
+
+.intro { padding-block: 80px; height: 100%; }
+.intro__inner { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; height: 100%; gap: 16px; }
+.intro__title { margin-bottom: 4px; }
+.intro__lead { max-width: 900px; color: var(--text); }
+.intro__cta { max-width: 900px; font-size: 1.15rem; color: var(--text-muted); }
+
+/* ---------------- Stats */
+.home-stats { padding: 120px 0 64px; }
+.home-stats__row { display: flex; justify-content: center; flex-wrap: wrap; gap: 16px; }
+.home-stat {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-width: 168px; padding: 18px 24px; text-align: center;
+}
+.home-stat__value {
+    font-size: 3rem; font-weight: 750; line-height: 1.1; letter-spacing: -0.03em;
+    background: linear-gradient(180deg, var(--text) 30%, color-mix(in srgb, var(--primary) 70%, var(--text)));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.home-stat__label { margin-top: 4px; font-size: 0.95rem; color: var(--text-muted); }
+
+/* ---------------- About */
+.home-about-wrap { margin-inline: 16px; }
+.home-about {
+    display: grid; grid-template-columns: 1fr; gap: 32px; padding: 24px;
+}
+@media (min-width: 900px) {
+    .home-about { grid-template-columns: auto 1fr; padding: 28px; }
+}
+.home-about__photo {
+    display: block; width: 100%; max-width: 300px; height: auto; margin-inline: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+}
+.home-about__text { display: flex; flex-direction: column; gap: 12px; }
+
+/* ---------------- Generic sections */
+.home-section { padding-block: 80px; }
+.home-section__title { margin-bottom: 24px; }
+
+/* ---------------- Projects */
+.project-card { display: flex; flex-direction: column; height: 100%; }
+.project-card__body { flex-grow: 1; padding: 20px 20px 0; }
+.project-card__title { margin-bottom: 8px; }
+.project-card__desc { margin-bottom: 16px; color: var(--text-muted); }
+.project-card__tech { display: flex; flex-wrap: wrap; gap: 6px; }
+.project-card__actions { display: flex; gap: 12px; padding: 16px 20px 20px; }
+
+/* ---------------- Skills */
+.skill-card {
+    display: flex; flex-direction: column; align-items: center; height: 100%;
+    padding: 20px 16px; text-align: center;
+}
+.skill-card__icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; margin-bottom: 12px;
+    color: var(--primary); background: var(--primary-soft); border-radius: 12px;
+}
+.skill-card__title { font-weight: 700; }
+.skill-card__desc { flex-grow: 1; display: flex; align-items: center; margin-top: 6px; color: var(--text-muted); }
+
+/* ---------------- Contact */
+.home-section--contact { scroll-margin-top: 80px; }
+.contact-band {
+    display: grid; grid-template-columns: 1fr; align-items: center; gap: 24px;
+    padding: 28px 16px; border-radius: 0; border-left: 0; border-right: 0;
+}
+@media (min-width: 900px) { .contact-band { grid-template-columns: 1fr 1fr; gap: 32px; } }
+.contact-band__title { text-align: center; }
+.contact-band__buttons { display: flex; flex-direction: column; gap: 12px; width: max-content; margin-inline: auto; }
+@media (min-width: 900px) {
+    .contact-band__title { text-align: right; }
+    .contact-band__buttons { margin-inline: 0; }
+}
+.contact-band__buttons .btn { justify-content: flex-start; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* ---------------- Guestbook */
+.home-section--guestbook { padding-block: 64px 96px; }
+.guestbook__header { margin-bottom: 24px; text-align: center; }
+.guestbook__header p { margin-top: 8px; color: var(--text-muted); }
+.guestbook__form { display: flex; flex-direction: column; gap: 16px; }
+.guestbook__fineprint { color: var(--text-faint); }
+.guestbook__entries { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
+.guestbook__entry-meta { margin-top: 8px; color: var(--text-muted); }
+.honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.guestbook__list-error { margin-top: 24px; }

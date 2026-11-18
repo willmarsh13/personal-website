@@ -1,12 +1,6 @@
-import {
-    Box,
-    Card,
-    Container,
-    Grid,
-    Typography
-} from "@mui/material";
 import React from "react";
 import {DatabaseZap, Gamepad2, LayoutDashboard, Rocket} from "lucide-react";
+import {Card, Container} from "../../../../ui";
 
 
 export default function Skills() {
@@ -46,32 +40,18 @@ export default function Skills() {
     ]
 
     return (
-        <Container maxWidth="lg">
-            <Grid container spacing={4}>
+        <Container size="lg">
+            <div className="grid grid--4">
                 {boxes.map((item, i) => (
-                    <Grid size={{xs: 12, sm: 6, md: 3}} key={i}>
-                        <Card variant="outlined" sx={{
-                            p: 2,
-                            textAlign: 'center',
-                            height: '100%',
-                            display: 'flex',
-                            flexDirection: 'column'
-                        }}>
-                            <Box mb={1}>{item.icon}</Box>
-                            <Typography fontWeight="bold">{item.title}</Typography>
-                            <Box sx={{
-                                flexGrow: '1 !important',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                alignItems: 'center'
-                            }}>
-                                <Typography variant="body2">{item.desc}</Typography>
-                            </Box>
-                        </Card>
-                    </Grid>
+                    <Card className="skill-card" key={i}>
+                        <span className="skill-card__icon">{item.icon}</span>
+                        <h3 className="skill-card__title">{item.title}</h3>
+                        <div className="skill-card__desc">
+                            <p className="t-small">{item.desc}</p>
+                        </div>
+                    </Card>
                 ))}
-            </Grid>
+            </div>
         </Container>
     )
 }

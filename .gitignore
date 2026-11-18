@@ -140,3 +140,6 @@ client/package-lock.json
 server/package-lock.json
 /.idea
 /.vscode
+
+# CRA build output
+client/build/

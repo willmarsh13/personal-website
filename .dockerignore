@@ -1,0 +1,14 @@
+# Never bake secrets into the image; Compose passes them in at runtime.
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+
+# Rebuilt inside the image
+**/node_modules
+client/build
+
+.git
+.idea
+.vscode

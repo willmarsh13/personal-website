@@ -11,16 +11,11 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
-    "@mui/icons-material": "^7.1.1",
-    "@mui/material": "^7.1.1",
     "@react-three/drei": "^10.5.0",
     "@react-three/fiber": "^9.2.0",
     "@reduxjs/toolkit": "^2.8.2",
     "lil-gui": "^0.20.0",
     "lucide-react": "^0.525.0",
-    "notistack": "^3.0.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-redux": "^9.2.0",
@@ -45,5 +40,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "proxy": "http://localhost:3002",
+  "engines": {
+    "node": ">=20.12"
   }
 }
