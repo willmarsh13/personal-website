@@ -7,6 +7,12 @@ services:
       - "3001:3001"
     environment:
       NODE_ENV: production
+    # Cap container logs (default is unbounded) so they can't fill the disk.
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     # MONGODB_URI, GUESTBOOK_SECRET, etc. live in server/.env (gitignored).
     env_file:
       - path: server/.env
