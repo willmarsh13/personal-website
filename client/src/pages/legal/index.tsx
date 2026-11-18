@@ -7,7 +7,13 @@ import {
     List,
     ListItem,
     ListItemText,
+    Link,
 } from "@mui/material";
+import {EMAILS, mailto} from "../../Shared/emails";
+
+const EmailLink: React.FC<{ address: string }> = ({address}) => (
+    <Link href={mailto(address)}>{address}</Link>
+);
 
 /**
  * ============================
@@ -16,7 +22,6 @@ import {
  */
 const SITE_NAME = "willmarsh.dev";
 const OWNER_NAME = "Will Marsh";
-const CONTACT_EMAIL = "contact@willmarsh.dev"; // update if different
 const GOVERNING_LAW_STATE = "United States"; // or your state, e.g. "Texas"
 const LAST_UPDATED = "January 6, 2026";
 
@@ -105,7 +110,16 @@ const LegalPage: React.FC = () => {
                 </Typography>
                 <Typography paragraph>
                     You may request access to or deletion of your personal information by
-                    contacting us at {CONTACT_EMAIL}.
+                    contacting us at <EmailLink address={EMAILS.privacy}/>.
+                </Typography>
+
+                <Typography variant="h6" gutterBottom>
+                    Communications
+                </Typography>
+                <Typography paragraph>
+                    Account and system emails are sent from <EmailLink address={EMAILS.noreply}/> or{" "}
+                    <EmailLink address={EMAILS.notifications}/>. These addresses are not monitored; for
+                    help with your account, contact <EmailLink address={EMAILS.support}/>.
                 </Typography>
 
                 <Typography variant="h6" gutterBottom>
@@ -159,6 +173,14 @@ const LegalPage: React.FC = () => {
                         <ListItemText primary="Introducing malware, scraping, or denial-of-service attacks" />
                     </ListItem>
                 </List>
+
+                <Typography variant="h6" gutterBottom>
+                    Reporting Security Issues
+                </Typography>
+                <Typography paragraph>
+                    If you discover a security vulnerability, please report it responsibly to{" "}
+                    <EmailLink address={EMAILS.security}/> rather than disclosing it publicly.
+                </Typography>
 
                 <Typography variant="h6" gutterBottom>
                     Account Responsibility
@@ -225,7 +247,9 @@ const LegalPage: React.FC = () => {
                 </Typography>
                 <Typography paragraph>
                     If you have questions about these Terms or the Privacy Policy, contact
-                    us at {CONTACT_EMAIL}.
+                    us at <EmailLink address={EMAILS.contact}/>. For privacy requests, use{" "}
+                    <EmailLink address={EMAILS.privacy}/>; for billing questions, use{" "}
+                    <EmailLink address={EMAILS.billing}/>.
                 </Typography>
             </Box>
         </Container>

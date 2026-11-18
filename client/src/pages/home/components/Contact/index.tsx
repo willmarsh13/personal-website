@@ -1,5 +1,6 @@
 import {Box, Typography, useTheme} from "@mui/material";
 import React from "react";
+import {EMAILS, mailto} from "../../../../Shared/emails";
 
 
 export default function Contact() {
@@ -13,14 +14,14 @@ export default function Contact() {
                 </Typography>
                 <Typography variant="body1" sx={{mt: 1}}>
                     <a
-                        href="mailto:willmarsh13@gmail.com"
+                        href={mailto(EMAILS.me)}
                         style={{
                             textDecoration: 'none',
                             color: theme.palette.primary.main,
                             fontWeight: 500,
                         }}
                     >
-                        willmarsh13@gmail.com
+                        {EMAILS.me}
                     </a>
                 </Typography>
             </Box>

@@ -7,6 +7,8 @@ const app = express();
 const port = 3001;
 
 app.use(express.static(path.resolve(__dirname, '../client/build')));
+// express.static ignores dot-directories by default; expose /.well-known (security.txt)
+app.use('/.well-known', express.static(path.resolve(__dirname, '../client/build/.well-known'), {dotfiles: 'allow'}));
 app.use(cors());
 app.set('trust proxy', true);
 app.use(express.json({ limit: '50mb' }));

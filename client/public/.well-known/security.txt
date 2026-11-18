@@ -1,0 +1,5 @@
+Contact: mailto:security@willmarsh.dev
+Expires: 2027-11-17T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://willmarsh.dev/.well-known/security.txt
+Policy: https://willmarsh.dev/legal#terms_of_service

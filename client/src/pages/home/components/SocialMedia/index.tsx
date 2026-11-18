@@ -5,6 +5,7 @@ import {Box, Paper, Typography, Stack, Grid, Button} from "@mui/material";
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import EmailIcon from '@mui/icons-material/Email';
+import {EMAILS, mailto} from "../../../../Shared/emails";
 
 interface socialMedia {
     name: string,
@@ -29,7 +30,7 @@ const socials: socialMedia[] = [
     {
         name: 'Email',
         icon: <EmailIcon/>,
-        URL: 'mailto:willmarsh13@gmail.com',
+        URL: mailto(EMAILS.me),
         color: 'primary',
     }
 ]
