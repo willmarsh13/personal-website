@@ -1,0 +1,114 @@
+# Build check on every PR and push; deploy to the server on pushes to main.
+#
+# Deploy SSHes into the server, pulls main into the existing checkout, rebuilds
+# the `personal-site` image and restarts it with docker compose.
+#
+# Repo secrets (Settings > Secrets and variables > Actions):
+#   DEPLOY_HOST         server hostname or IP
+#   DEPLOY_USER         SSH user (must be able to run docker)
+#   DEPLOY_SSH_KEY      private key for that user (whole file, ed25519 recommended)
+#   DEPLOY_PATH         path to this repo's checkout on the server
+#   DEPLOY_PORT         optional, default 22
+#   DEPLOY_KNOWN_HOSTS  optional but recommended: output of `ssh-keyscan <host>`.
+#                       Without it the host key is trusted on first use each run.
+
+name: Build and deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Never run two deploys at once; a newer push waits for the current one.
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Docker build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t personal-site:ci .
+
+  deploy:
+    name: Deploy
+    needs: build
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 20
+    env:
+      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+      DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+      DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+      DEPLOY_PORT: ${{ secrets.DEPLOY_PORT || '22' }}
+    steps:
+      - name: Check secrets
+        env:
+          HAS_KEY: ${{ secrets.DEPLOY_SSH_KEY != '' }}
+        run: |
+          missing=""
+          for v in DEPLOY_HOST DEPLOY_USER DEPLOY_PATH; do
+            [ -n "${!v}" ] || missing="$missing $v"
+          done
+          [ "$HAS_KEY" = "true" ] || missing="$missing DEPLOY_SSH_KEY"
+          if [ -n "$missing" ]; then
+            echo "::error::Missing repo secrets:$missing"
+            exit 1
+          fi
+
+      - name: Set up SSH
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key && chmod 600 ~/.ssh/deploy_key
+          if [ -n "$KNOWN_HOSTS" ]; then
+            printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          else
+            echo "::warning::DEPLOY_KNOWN_HOSTS not set; trusting the server's host key on first use."
+            ssh-keyscan -p "$DEPLOY_PORT" "$DEPLOY_HOST" > ~/.ssh/known_hosts
+          fi
+
+      - name: Pull, build and restart
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "$DEPLOY_PORT" -o BatchMode=yes "$DEPLOY_USER@$DEPLOY_HOST" \
+            DEPLOY_PATH="$DEPLOY_PATH" EXPECTED_SHA="$GITHUB_SHA" bash -s <<'EOF'
+          set -euo pipefail
+          cd "$DEPLOY_PATH"
+          git fetch --quiet origin main
+          # Fast-forward only: stops instead of overwriting local commits on the server.
+          git merge --ff-only FETCH_HEAD
+          sha=$(git rev-parse HEAD)
+          [ "$sha" = "$EXPECTED_SHA" ] || echo "note: server is at $sha (workflow ran for $EXPECTED_SHA)"
+          docker build -t personal-site \
+            --build-arg DD_GIT_REPOSITORY_URL="$(git config --get remote.origin.url)" \
+            --build-arg DD_GIT_COMMIT_SHA="$sha" .
+          docker compose up -d
+          docker image prune -f >/dev/null
+          EOF
+
+      - name: Smoke test
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "$DEPLOY_PORT" -o BatchMode=yes "$DEPLOY_USER@$DEPLOY_HOST" bash -s <<'EOF'
+          set -euo pipefail
+          for i in $(seq 1 15); do
+            if curl -fsS -o /dev/null http://localhost:3001/; then
+              echo "site up"
+              curl -fsS -o /dev/null -w "eink: HTTP %{http_code}, %{size_download} bytes\n" http://localhost:3001/api/eink || echo "::warning::/api/eink check failed"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "site did not come up on :3001"
+          docker logs --tail 50 personal-site || true
+          exit 1
+          EOF
