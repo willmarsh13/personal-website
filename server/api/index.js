@@ -9,6 +9,7 @@ router.use((req, res, next) => {
 router.use("/features", require("./toggles").router)
 router.use("/guestbook", require("./guestbook"))
 router.use("/admin", require("./admin"))
+router.use(require("./eink"))
 
 router.use((req, res) => res.status(404).json({error: 'Not found.'}));
 

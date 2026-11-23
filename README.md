@@ -24,6 +24,26 @@ npm --prefix client start          # UI on :3000, proxies /api to :3002
 | `ADMIN_SESSION_SECRET` | for admin | 32+ random characters for signing admin session cookies. Changing it signs out every session. |
 | `PORT` | no | Default `3001`. |
 
+## E-ink display
+
+Server-rendered dashboard (date + weather) for a 400×300 1-bit panel (CrowPanel 4.2" ESP32-S3, SSD1683).
+
+| Endpoint | Returns |
+|---|---|
+| `GET /api/eink` | Raw bitmap, 15,000 bytes. Rows top to bottom, 50 bytes per row, MSB = leftmost pixel. `1` = white, `0` = black (the SSD1683's native RAM format). |
+| `GET /api/eink?invert=1` | Same, with `1` = black. |
+| `GET /api/eink.png` | PNG of exactly the same pixels, for checking the layout in a browser. |
+
+Responses have an `ETag` that only changes when the picture does (new day or new weather reading, roughly every 15 min). Send `If-None-Match` and skip the refresh on a `304`. Weather comes from [Open-Meteo](https://open-meteo.com) (no key) and is cached for 10 minutes; if it's down, the last good reading is used. Rate limited to 30 requests/min per IP.
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `EINK_LAT` / `EINK_LON` | Atlanta | Weather location. |
+| `EINK_LOCATION` | `Atlanta` | Label in the top right. Set to an empty string to hide it. |
+| `EINK_TIMEZONE` | `America/New_York` | Date and weather timezone. |
+| `EINK_UNITS` | `fahrenheit` | Or `celsius` (wind switches to km/h). |
+| `EINK_TOKEN` | unset | If set, requests need `?token=…` or `Authorization: Bearer …`. |
+
 ## Feature toggles
 
 Stored in the MongoDB `toggles` collection, one document per feature:
