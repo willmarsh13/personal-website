@@ -34,11 +34,13 @@ Server-rendered dashboard (date + weather) for a 400×300 1-bit panel (CrowPanel
 | `GET /api/eink?invert=1` | Same, with `1` = black. |
 | `GET /api/eink.png` | PNG of exactly the same pixels, for checking the layout in a browser. |
 
-Responses have an `ETag` that only changes when the picture does (new day or new weather reading, roughly every 15 min). Send `If-None-Match` and skip the refresh on a `304`. Weather comes from [Open-Meteo](https://open-meteo.com) (no key) and is cached for 10 minutes; if it's down, the last good reading is used. Rate limited to 30 requests/min per IP.
+Responses have an `ETag` that only changes when the picture does (new day or new weather reading, roughly every 15 min). Send `If-None-Match` and skip the refresh on a `304`. Weather comes from the NWS API ([api.weather.gov](https://www.weather.gov/documentation/services-web-api), no key). Current conditions are the latest METAR observation from `EINK_STATION` (cached 5 min). Today's high is the higher of the forecast high and the highest temperature observed since midnight, so it still shows after the afternoon forecast period ends. Highs, lows, rain chance and the 3-day row come from the NWS gridpoint forecast for the station's location (cached 30 min). If either call fails, the last good copy is used; with no forecast at all, the current conditions still show. Rate limited to 30 requests/min per IP.
 
 | Variable | Default | Purpose |
 |---|---|---|
-| `EINK_LAT` / `EINK_LON` | Atlanta | Weather location. |
+| `EINK_STATION` | `KATL` | METAR station for current conditions. |
+| `EINK_LAT` / `EINK_LON` | the station's coordinates | Forecast location, if it should differ from the station. |
+| `EINK_USER_AGENT` | `personal-website-eink (https://willmarsh.dev)` | NWS requires a User-Agent identifying the app and a contact. |
 | `EINK_LOCATION` | `Atlanta` | Label in the top right. Set to an empty string to hide it. |
 | `EINK_TIMEZONE` | `America/New_York` | Date and weather timezone. |
 | `EINK_UNITS` | `fahrenheit` | Or `celsius` (wind switches to km/h). |

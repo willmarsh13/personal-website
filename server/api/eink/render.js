@@ -24,7 +24,7 @@ const font = {
     mono: (px) => `${px}px "JetBrains Mono"`,
 };
 
-const deg = (n) => `${Math.round(n)}°`;
+const deg = (n) => (n == null || !Number.isFinite(n) ? '—' : `${Math.round(n)}°`);
 
 // ---------- icons ----------
 
@@ -178,6 +178,27 @@ function fitText(ctx, text, makeFont, size, maxWidth, min = 10) {
     return px;
 }
 
+/** Fits `text` on one line at `size`, or wraps it to two lines at a smaller size. */
+function wrap(ctx, text, makeFont, maxWidth, size = 20, small = 16) {
+    for (let px = size; px >= 17; px--) {
+        ctx.font = makeFont(px);
+        if (ctx.measureText(text).width <= maxWidth) return [text];
+    }
+    ctx.font = makeFont(small);
+    const words = text.split(' ');
+    let best = [text];
+    for (let i = 1; i < words.length; i++) {
+        const a = words.slice(0, i).join(' ');
+        const b = words.slice(i).join(' ');
+        if (ctx.measureText(a).width <= maxWidth && ctx.measureText(b).width <= maxWidth) return [a, b];
+        best = [a, b];
+    }
+    // Nothing fits cleanly: shrink the longer line until both do.
+    const longest = best.reduce((x, y) => (ctx.measureText(x).width >= ctx.measureText(y).width ? x : y));
+    fitText(ctx, longest, makeFont, small, maxWidth, 10);
+    return best;
+}
+
 function rule(ctx, y) {
     ctx.fillRect(16, y, WIDTH - 32, 2);
 }
@@ -199,16 +220,13 @@ function draw(ctx, {now, timezone, location, weather}) {
     ctx.font = font.semi(22);
     ctx.fillText(fmt({month: 'long', day: 'numeric', year: 'numeric'}), 16, 82);
 
-    // Top-right: location + data timestamp
+    // Top-right: location + station and observation time
     ctx.textAlign = 'right';
     ctx.font = font.mono(13);
     if (location) ctx.fillText(location.toUpperCase(), WIDTH - 16, 30);
     if (weather) {
-        // asOf is local wall-clock time without an offset; format it as-is.
-        const [, hhmm] = weather.asOf.split('T');
-        const [h, m] = hhmm.split(':').map(Number);
-        const time = `${((h + 11) % 12) + 1}:${String(m).padStart(2, '0')} ${h < 12 ? 'AM' : 'PM'}`;
-        ctx.fillText(`AS OF ${time}`, WIDTH - 16, 48);
+        const time = fmt({hour: 'numeric', minute: '2-digit'}, weather.asOf);
+        ctx.fillText(`${weather.station} ${time}`, WIDTH - 16, 48);
     }
 
     rule(ctx, 96);
@@ -220,36 +238,52 @@ function draw(ctx, {now, timezone, location, weather}) {
         return;
     }
 
-    const {current, days, windUnit} = weather;
-    const today = days[0];
+    const {current, today, days, windUnit} = weather;
 
     // Current conditions
     drawIcon(ctx, current.icon, 16, 108, 92, current.isDay);
 
     ctx.textAlign = 'left';
-    ctx.font = font.heavy(76);
+    fitText(ctx, deg(current.temp), font.heavy, 76, 134, 40);
     ctx.fillText(deg(current.temp), 118, 184);
 
-    const colX = 262;
+    // METAR descriptions can be long ("Light Rain and Fog/Mist"): one line at
+    // 20px if it fits, otherwise wrap to two smaller lines.
+    const colX = 258;
     const colW = WIDTH - 16 - colX;
-    fitText(ctx, current.label, font.semi, 20, colW);
-    ctx.fillText(current.label, colX, 126);
+    const labelLines = wrap(ctx, current.label, font.semi, colW);
+    let y = labelLines.length > 1 ? 118 : 126;
+    for (const line of labelLines) {
+        ctx.fillText(line, colX, y);
+        y += 18;
+    }
 
-    ctx.font = font.mono(14);
+    const wind = current.wind == null ? '—' : Math.round(current.wind);
+    const gust = current.gust ? `G${Math.round(current.gust)}` : '';
     const lines = [
         `H ${deg(today.high)}  L ${deg(today.low)}`,
         `FEELS ${deg(current.feelsLike)}`,
-        `WIND ${Math.round(current.wind)} ${windUnit.toUpperCase()}`,
-        `RAIN ${today.precip ?? 0}%`,
+        `WIND ${wind}${gust} ${windUnit.toUpperCase()}`,
+        `RAIN ${today.precip == null ? '—' : `${today.precip}%`}`,
     ];
-    lines.forEach((line, i) => ctx.fillText(line, colX, 150 + i * 18));
+    y = labelLines.length > 1 ? 156 : 150;
+    const gap = labelLines.length > 1 ? 16 : 18;
+    lines.forEach((line, i) => {
+        fitText(ctx, line, font.mono, 14, colW, 10);
+        ctx.fillText(line, colX, y + i * gap);
+    });
 
     rule(ctx, 214);
 
     // Next three days
-    const cols = days.slice(1, 4);
-    const w = (WIDTH - 32) / cols.length;
-    cols.forEach((day, i) => {
+    if (!days.length) {
+        ctx.textAlign = 'center';
+        ctx.font = font.mono(14);
+        ctx.fillText('FORECAST UNAVAILABLE', WIDTH / 2, 262);
+        return;
+    }
+    const w = (WIDTH - 32) / 3;
+    days.slice(0, 3).forEach((day, i) => {
         const x0 = 16 + i * w;
         if (i > 0) ctx.fillRect(Math.round(x0), 224, 1, 64);
         // Daily dates are plain YYYY-MM-DD; noon UTC keeps the weekday right in any zone.
@@ -258,8 +292,9 @@ function draw(ctx, {now, timezone, location, weather}) {
         ctx.font = font.mono(14);
         ctx.fillText(label, x0 + 12, 244);
         drawIcon(ctx, day.icon, x0 + w - 56, 220, 46, true);
-        ctx.font = font.semi(20);
-        ctx.fillText(`${deg(day.high)} / ${deg(day.low)}`, x0 + 12, 280);
+        const temps = `${deg(day.high)} / ${deg(day.low)}`;
+        fitText(ctx, temps, font.semi, 20, w - 18, 12);
+        ctx.fillText(temps, x0 + 12, 280);
     });
 }
 

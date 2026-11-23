@@ -30,9 +30,10 @@ function checkToken(req, res, next) {
 
 async function build(req) {
     const {timezone} = config();
-    const weather = await getWeather();
+    const now = new Date();
+    const weather = await getWeather(now);
     return render(
-        {now: new Date(), timezone, location: process.env.EINK_LOCATION ?? 'Atlanta', weather},
+        {now, timezone, location: process.env.EINK_LOCATION ?? 'Atlanta', weather},
         {invert: req.query.invert === '1' || req.query.invert === 'true'},
     );
 }
