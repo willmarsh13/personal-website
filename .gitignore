@@ -143,3 +143,6 @@ server/package-lock.json
 
 # CRA build output
 client/build/
+
+# Device credentials
+devices/**/secrets.h

@@ -51,6 +51,9 @@ app.get('/assets', (req, res) => {
 
 app.use('/api', require('./api'));
 
+// 400x300 1-bit pages and images for the e-ink display.
+app.use('/eink', require('./eink'));
+
 // The admin page is unlinked; also tell crawlers not to index it.
 app.use('/admin', (req, res, next) => {
     res.set({'X-Robots-Tag': 'noindex, nofollow', 'Cache-Control': 'no-store'});

@@ -56,3 +56,24 @@ The guestbook sits at the bottom of the home page (`/#guestbook`; old `/guestboo
 - One entry per visitor, enforced by a unique index on a hashed IP (IPv6 grouped by /64). Also rate limited, capped per day, with a honeypot field.
 - Names and messages are filtered for explicit language (including leetspeak, spacing and invisible-character tricks), links and email addresses, and junk.
 - Hide or delete entries from `/admin`.
+
+## E-ink display (`/eink`)
+
+Pages sized for a 400x300 black-and-white e-paper panel (CrowPanel ESP32-S3 4.2"). The panel has no browser, so each page is also served as a 1-bit image. Both come from the same markup, rendered on the server with [satori](https://github.com/vercel/satori) and resvg (no headless browser). Weather is from [Open-Meteo](https://open-meteo.com) (free, no key), cached for 10 minutes.
+
+| URL | What |
+|---|---|
+| `/eink` or `/eink/today` | HTML preview, exactly 400x300, no JavaScript. `?zoom=2` enlarges it on a desktop screen. |
+| `/eink/today.png` | 1-bit PNG, the exact pixels the panel shows. |
+| `/eink/today.bmp` | 1-bit BMP, for GxEPD2's `drawBitmapFromWeb`-style examples. |
+| `/eink/today.bin` | Raw 15,000-byte frame, row-major, MSB = leftmost pixel, 1 = white. `?invert=1` gives 1 = black for Adafruit GFX `drawBitmap`. |
+
+Optional env vars: `EINK_LAT`, `EINK_LON` (default central Atlanta), `EINK_PLACE` (label, default `Atlanta`), `EINK_TZ` (default `America/New_York`).
+
+Add a panel: create `server/eink/panels/<name>.js` exporting `{id, title, load(), markup(data)}` and list it in `PANELS` in `server/eink/index.js`. Markup must stick to what satori can lay out: inline styles, flexbox only, pure black on white.
+
+### Device
+
+![Today panel](devices/crowpanel-eink/preview.png)
+
+`devices/crowpanel-eink/crowpanel-eink.ino` wakes every 15 minutes, downloads `/eink/today.bin?invert=1`, draws it with GxEPD2 and deep-sleeps. Copy `secrets.example.h` to `secrets.h` for Wi-Fi. A refresh more often than every 10 minutes won't show new weather, and each full refresh flashes the panel.
